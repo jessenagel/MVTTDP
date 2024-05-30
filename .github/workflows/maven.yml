@@ -12,9 +12,9 @@ permissions:
   
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    tags:
+      - 'v*.*.*'  # Triggers the workflow on tags matching the pattern v1.2.3
+
 
 jobs:
   build:
