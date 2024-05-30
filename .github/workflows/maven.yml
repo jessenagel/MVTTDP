@@ -28,7 +28,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Install Ilog
-      run: mvn install:install-file -Dfile=".m2/repository/cplex.jar" -DgroupId="ilox" -DartifactId="cplex" -Dversion="20.1.0" -Dpackaging=jar -DgeneratePom=true
+      run: mvn install:install-file -Dfile=".m2/repository/cplex.jar" -DgroupId="ilog" -DartifactId="cplex" -Dversion="20.1.0" -Dpackaging=jar -DgeneratePom=true
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
