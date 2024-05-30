@@ -7,7 +7,9 @@
 # documentation.
 
 name: Java CI with Maven
-
+permissions:
+  contents: write  # Add this line to grant write permissions to contents
+  
 on:
   push:
     branches: [ "master" ]
