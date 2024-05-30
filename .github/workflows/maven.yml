@@ -35,10 +35,10 @@ jobs:
       run: mvn -B package --file pom.xml
     - name: Extract Tag Name
       id: extract_tag
-      run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+      run: echo "TAG_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
     - name: Print Tag Name
       id: Print_tag
-      run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}"
+      run: echo "TAG_NAME=${GITHUB_REF#refs/heads/}"
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
