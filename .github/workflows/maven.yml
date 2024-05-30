@@ -38,7 +38,7 @@ jobs:
       run: echo "TAG_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
     - name: Print Tag Name
       id: Print_tag
-      run: echo "TAG_NAME=${GITHUB_REF#refs/heads/}"
+      run: echo ${{ env.TAG_NAME }}
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
