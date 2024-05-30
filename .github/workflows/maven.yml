@@ -36,6 +36,9 @@ jobs:
     - name: Extract Tag Name
       id: extract_tag
       run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+    - name: Print Tag Name
+      id: Print_tag
+      run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}"
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
