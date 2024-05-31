@@ -29,12 +29,8 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-    - name: Extract Tag Name
-      id: extract_tag
-      run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-
     - name: Print Tag Name
-      run: echo ${{ env.TAG_NAME }}
+      run: echo ${{ github.ref }}
 
     - name: Create GitHub Release
       id: create_release
