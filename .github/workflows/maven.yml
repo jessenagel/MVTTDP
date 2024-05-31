@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Build and publish Jar with dependencies
 
 permissions:
   contents: write  # This grants write permissions to contents
@@ -28,9 +28,6 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-    - name: Print Tag Name
-      run: echo ${{ github.ref }}
-
     - name: Create GitHub Release
       id: create_release
       uses: zendesk/action-create-release@v1
@@ -43,14 +40,6 @@ jobs:
           - Auto-generated release notes by GitHub Actions.
         draft: false
         prerelease: false
-    - name: Print files
-      run: ls
-
-    - name: Print files
-      run: ls App
-
-    - name: Print files
-      run: ls App/target
 
     - name: Upload JAR file to Release
       uses: actions/upload-release-asset@v1
@@ -61,11 +50,3 @@ jobs:
         asset_path: App/target/app-1.0-SNAPSHOT-jar-with-dependencies.jar  # Replace with your actual jar file name
         asset_name: App-1.0-SNAPSHOT-jar-with-dependencies.jar  # Replace with your actual jar file name
         asset_content_type: application/java-archive
-
-    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-    # Uncomment and ensure proper permissions if this step is needed
-    # - name: Update dependency graph
-    #   uses: advanced-security/maven-dependency-submission-action@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
