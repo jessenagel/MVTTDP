@@ -37,6 +37,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
+        auto_increment_type: patch
         body: |
           Changes in this release:
           - Auto-generated release notes by GitHub Actions.
