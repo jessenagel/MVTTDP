@@ -2,6 +2,7 @@ name: Java CI with Maven
 
 permissions:
   contents: write  # This grants write permissions to contents
+  packages: write  # Needed for creating a release
 
 on:
   push:
