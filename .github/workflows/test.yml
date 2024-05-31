@@ -26,3 +26,12 @@ jobs:
             - Auto-generated release notes by GitHub Actions.
           draft: false
           prerelease: false
+      - name: Upload JAR file to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: cplex-20.1.0.jar  # Replace with your actual jar file name
+          asset_name: app-1.0-SNAPSHOT-jar-with-dependencies.jar  # Replace with your actual jar file name
+          asset_content_type: application/java-archive
