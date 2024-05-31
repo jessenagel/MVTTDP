@@ -7,7 +7,7 @@ permissions:
 on:
   push:
     tags:
-      - 'v*.*.*'  # Triggers the workflow on tags matching the pattern v1.2.3
+      - 'v*'  # Triggers the workflow on tags matching the pattern v1.2.3
 
 jobs:
   build:
@@ -42,8 +42,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.TAG_NAME }}
-        release_name: Release ${{ env.TAG_NAME }}
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
         body: |
           Changes in this release:
           - Auto-generated release notes by GitHub Actions.
