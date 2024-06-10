@@ -45,6 +45,7 @@ public class LoadInputs {
                 TouristConstants.capacityMultiplier = (double) parameters.get("capacityMultiplier");
                 TouristConstants.arrivalProcess = (String) parameters.get("arrivalProcess");
                 TouristConstants.strictness = (Double) parameters.get("strictness");
+                TouristConstants.experimentID = (String) parameters.get("experimentID");
             }catch(NullPointerException e){
                 System.err.println("Missing parameter, using defaults");
             }

@@ -155,7 +155,6 @@ public class Area {
         int totalSpaces = 0;
         for (Event event : this.events.values()) {
             if (event.touristTypes.contains(touristType)) {
-                System.out.println(event.getCapacityRestOfDay(touristTime));
                 totalSpaces += event.getCapacityRestOfDay(touristTime);
             }
         }
@@ -244,14 +243,6 @@ public class Area {
             } else {//TODO: CHANGED PARAMETERS OF TIMING!!! CHANGE!!!
                 numberOfUsersToCome += TouristConstants.lambda * (TouristConstants.closeTime.toMinutes() - currentTime.toMinutes()) / (TouristConstants.closeTime.toMinutes() - TouristConstants.openTime.toMinutes());
             }
-//            System.out.println("Expected number of users still to come: " + numberOfUsersToCome);
-//            int actualNumberOfUsersToCome =0;
-//            for(User user : this.users){
-//                if(TouristTime.geq(user.startTime,currentTime)){
-//                    actualNumberOfUsersToCome++;
-//                }
-//            }
-//            System.out.println("Actual number of users still to come: " + actualNumberOfUsersToCome );
             expectedUtility += (double) numberOfUsersToCome / batch.event.getCapacityRestOfDay(currentTime) * Math.pow(10 * Math.exp(Math.pow(touristType.baseRanking.indexOf(batch.event) + 1.0, 2) / (-TouristConstants.BETA)), 2) * touristType.probability;
         }
         return expectedUtility;
@@ -338,13 +329,9 @@ public class Area {
             if(TouristTime.greater(user.queryTime,user.startTime)){
                 user.startTime= user.queryTime;
             }
-            System.out.println("_F");
+
             user.endTime.day = TouristConstants.dayOfEvents;
             user.endTime.rebalance();
-            user.startTime.print();
-            user.queryTime.print();
-            user.endTime.print();
-
             //user.groupSize - generator.nextInt(user.groupSize)
             for (Event event : this.events.values()) {
                 user.groupSizePerEvent.put(event, user.groupSize);
@@ -384,7 +371,6 @@ public class Area {
                 user.startEvent.exit = user.start;
                 user.endEvent.entrance = user.end;
                 user.startTime = generateTimeUniformHour(hour).increaseBy(new TouristTime(TouristConstants.dayOfEvents + ":0:0"));
-                user.startTime.print();
                 user.queryTime = user.startTime; //TODO Make these separate
                 //user.groupSize - generator.nextInt(user.groupSize)
                 for (Event event : this.events.values()) {
@@ -403,9 +389,6 @@ public class Area {
             }
             return 0;
         });
-        for (User user : this.users) {
-            System.out.println(user.queryTime.toMinutes());
-        }
     }
 
     private TouristTime generateTimeUniformHour(int hour) {

@@ -39,6 +39,7 @@ public final class TouristConstants {
     public static int index = 1;
     public static double sigma = 4.0;
 
+    public static String experimentID = "None";
     private TouristConstants() {
     }
 

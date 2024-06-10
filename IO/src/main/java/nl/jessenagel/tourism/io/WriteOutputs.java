@@ -3,6 +3,7 @@ package nl.jessenagel.tourism.io;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.Format;
@@ -173,7 +174,8 @@ public class WriteOutputs {
         }
         results.put("scores",scores);
         results.put("times",times);
-        try (FileWriter file = new FileWriter(folder+"outputfiles/results/results"+s+".json")) {
+        new File("outputfiles/results/"+TouristConstants.experimentID).mkdirs();
+        try (FileWriter file = new FileWriter(folder+"outputfiles/results/"+TouristConstants.experimentID+"/results"+s+".json")) {
             //We can write any JSONArray or JSONObject instance to the file
             file.write(results.toJSONString());
             file.flush();
