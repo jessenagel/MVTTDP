@@ -13,7 +13,7 @@ public class Main {
         }
         TouristConstants.seed = Integer.parseInt(args[0]);
         LoadInputs.readParameterFile(args[1]);
-        if ((TouristConstants.inputFolder.equals("/export/scratch1/jmn/IdeaProjects/TouristTrip/inputfiles/amsterdam/") && !TouristConstants.distanceType.equals("file")) || (TouristConstants.inputFolder.equals("/export/scratch1/jmn/IdeaProjects/TouristTrip/inputfiles/solvable/") && !TouristConstants.distanceType.equals("euclidean"))) {
+        if ((TouristConstants.inputFolder.equals("inputfiles/amsterdam/") && !TouristConstants.distanceType.equals("file")) || (TouristConstants.inputFolder.equals("inputfiles/solvable/") && !TouristConstants.distanceType.equals("euclidean"))) {
             System.err.println("ARE YOU SURE ABOUT THE DISTANCE TYPE!?");
             System.exit(5);
         }
