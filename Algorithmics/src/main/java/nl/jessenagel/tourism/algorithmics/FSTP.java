@@ -14,7 +14,6 @@ public class FSTP {
         List<User> usersToSchedule = new LinkedList<>(this.area.users);
         Map<User, List<Batch>> previousTrips = new HashMap<>();
         for (int i = 1; i <= 3; i++) {
-            System.out.println(i);
             for (User user : usersToSchedule) {
                 if (previousTrips.get(user) != null) {
                     unBookBatches(previousTrips.get(user), user);

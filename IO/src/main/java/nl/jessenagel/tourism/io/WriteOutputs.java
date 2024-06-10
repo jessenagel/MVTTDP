@@ -136,12 +136,6 @@ public class WriteOutputs {
             System.out.println("Schedule size: " + user.schedule.size());
             user.printSchedule();
             System.out.println("Schedule score: " + user.happiness);
-//            if(user.name.equals("16_2")){
-//                for(Event event : user.wishList){
-//                    System.out.println(event.name);
-//                    System.out.println(event.getCapacityRestOfDay(user.queryTime));
-//                }
-//            }
             totalScheduleLength += user.schedule.size();
         }
         System.out.println("Average schedule size" + totalScheduleLength/area.users.size());

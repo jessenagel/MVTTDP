@@ -27,13 +27,8 @@ public class Slootweg {
             initialTripBuilder(user);
             user.sortSchedule();
             user.happiness = Generic.calcScore(user.schedule, user, this.area);
-            if(user.name.equals("16_283")){
-                System.out.println("____________________________________");
-                user.printSchedule();
-            }
         }
         for (int i = 1; i < I_MAX; i++) {
-            System.out.print(i);
             this.area.users.sort(Comparator.comparing(o -> o.happiness)); //Sort by happiness
             for (User user : this.area.users) {
                 tripExpansion(user, i);
@@ -104,9 +99,7 @@ public class Slootweg {
 
     private void tripExpansion(User user, int numberOfEventsFromWishlist) {
         if (greedyExpansion(user, numberOfEventsFromWishlist)) {
-//            System.out.println("IMPROVED");
         } else {
-//            System.out.println("No further improvement possible");
             if(numberOfEventsFromWishlist < I_ENUM){
                 //Full enumeration used
                 FullEnumeration fullEnumeration = new FullEnumeration();
@@ -120,7 +113,6 @@ public class Slootweg {
                 if(Generic.calcScore(newRoute,user,area)> user.happiness){
                     this.area.unbookBatches(user,new ArrayList<>(user.schedule));
                     this.area.bookBatches(user,newRoute);
-//                    System.out.println("improved by full enumeration");
                 }
             }else{
                 //Improve by ILS
@@ -135,7 +127,6 @@ public class Slootweg {
                 if(Generic.calcScore(newRoute,user,area)> user.happiness){
                     this.area.unbookBatches(user,new ArrayList<>(user.schedule));
                     this.area.bookBatches(user,newRoute);
-//                    System.out.println("improved by ILS");
                 }
             }
         }

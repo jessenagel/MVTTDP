@@ -65,7 +65,7 @@ public class MVTTDP {
             WriteOutputs.exportUtilization(this.area);
         } else {
             WriteOutputs.exportJson(this.area, timeElapsed / 1000000);
-            System.out.println("INFEASIBLE");
+            System.err.println("INFEASIBLE");
         }
     }
 

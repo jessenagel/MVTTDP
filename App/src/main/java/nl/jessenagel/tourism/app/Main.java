@@ -19,7 +19,6 @@ public class Main {
         }
         MVTTDP MVTTDP = new MVTTDP();
         MVTTDP.create();
-        System.out.println(MVTTDP.area.users.size());
         MVTTDP.run();
     }
 }

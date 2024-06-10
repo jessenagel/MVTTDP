@@ -17,19 +17,6 @@ public class ILS {
     public int maxLength;
     public int numberOfInsertCalls = 0;
 
-    public List<Batch> solve(List<Event> eventsToCheck) {
-        return ILSAlternative(eventsToCheck);
-//        List<Batch> solution = initialisation();
-////        List<Batch> solution = gapInsert(new ArrayList<>());
-//
-//        if (solution.size() == 0) {
-//            return solution;
-//        }
-////        Visualizer.printSchedule(area, solution);
-//        solution = improve(solution);
-//        return solution;
-    }
-
     private List<Batch> improve(List<Batch> solution) {
         int A = 0;
         int R = 1;
@@ -44,7 +31,6 @@ public class ILS {
             int start = A;
             Batch end;
             double minProfit = Generic.calcScore(tempSolution, this.user, area);
-//            System.out.println(minProfit + " + " + noImprove);
             if (A + R > size - 1) {
                 end = null;
                 tempSolution.subList(A, size).clear();
@@ -65,7 +51,6 @@ public class ILS {
                 A++;
                 R++;
             }
-//            System.out.println(System.nanoTime() - startTime);
 
         }
         user.happiness = Generic.calcScore(solution, this.user, area);
@@ -167,7 +152,7 @@ public class ILS {
         return false;
     }
 
-    public List<Batch> ILSAlternative(List<Event> eventsToCheck) {
+    public List<Batch> solve(List<Event> eventsToCheck) {
         int S = 0;
         int R = 1;
         int noImprove = 0;
@@ -196,7 +181,6 @@ public class ILS {
                 noImprove = 0;
             }
             if (solution.size() == 0) {
-                System.out.println("Size 0: " + user.name);
                 return solution;
             }
             while (S >= solution.size()) {
@@ -263,14 +247,6 @@ public class ILS {
             boolean inserted = false;
 
             for (Gap gap : gaps) {
-                if(user.name.equals("3")){
-                    System.out.println("### ");
-                    System.out.println(event.name);
-                    gap.startTime.print();
-                    gap.endTime.print();
-                    event.length.print();
-                    System.out.println(canFitInGap(gap, event));
-                }
                 if (canFitInGap(gap, event)) {
                     Batch batch = findLeastCrowdedInGap(gap, event);
 

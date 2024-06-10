@@ -10,7 +10,6 @@ public class Visualizer {
             batch.startTime.print();
             System.out.println("to: ");
             batch.endTime.print();
-//            System.out.println("Place on wishlist: " + this.wishList.indexOf(batch.event));
         }
     }
 }

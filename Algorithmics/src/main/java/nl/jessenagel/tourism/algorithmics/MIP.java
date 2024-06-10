@@ -84,7 +84,7 @@ public class MIP {
                     }
 
                 } else {
-                    System.out.println("Could not solve");
+                    System.err.println("Could not solve");
                 }
 
             } catch (IloException e) {
@@ -116,7 +116,7 @@ public class MIP {
                     try {
                         if (cplex.getValue(yMap.get(event).get(batch).get(user)) > 0.9) {
                             if (!batch.bookGroup(user)) {
-                                System.out.println("Something going very wrong while booking!");
+                                System.err.println("Something going very wrong while booking!");
                             }
                         }
                     } catch (IloException e) {
