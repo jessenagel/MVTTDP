@@ -12,13 +12,11 @@ public class Event {
     public int capacity, batchCapacity;
     public boolean singleBatch;
     public TouristTime length, first, last, every;
-    public List<TouristType> touristTypes;
     public  List<User> blockList;
 
     public Map<Integer, Integer> concurrentVisitors;
     public Event() {
         this.batches = new ArrayList<>();
-        this.touristTypes = new ArrayList<>();
         this.blockList = new ArrayList<>();
         this.concurrentVisitors = new HashMap<>();
         for(TouristTime touristTime : TouristTime.getAllTimesBetween(TouristConstants.openTime,TouristConstants.closeTime)){

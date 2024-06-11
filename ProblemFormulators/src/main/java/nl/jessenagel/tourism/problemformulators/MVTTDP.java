@@ -20,10 +20,9 @@ public class MVTTDP {
         this.area.simplified = true;
         LoadInputs.readLocations(this.area);
         LoadInputs.readEvents(this.area);
-        LoadInputs.readTypes(this.area);
+        LoadInputs.readRanking(this.area);
         LoadInputs.readDistances(this.area);
         CommonFunctions.createBatches(this.area);
-        this.area.setEventTypes();
         if (TouristConstants.poisson.equals("homogeneous")) {
             this.area.generateUsers(Area.poissonRNG(TouristConstants.lambda));
         } else {
@@ -77,10 +76,6 @@ public class MVTTDP {
         if (TouristConstants.knownLambda) {
             lambda_hat = TouristConstants.lambda;
         }
-        Map<TouristType, Integer> numberOfEachType = new HashMap<>();
-        for (TouristType touristType : this.area.touristTypes) {
-            numberOfEachType.put(touristType, 0);
-        }
         for (User user : this.area.users) {
             long startTime = System.nanoTime();
             int spacesLeft = this.area.calcNumberOfSpacesLeft(user.queryTime);
@@ -91,7 +86,7 @@ public class MVTTDP {
                 ILS.MIN_IMPROVEMENT = 1.3; //1.3
                 for (Event event : this.area.events.values()) {
                     for (Batch batch : event.batches) {
-                        if(this.area.calculateNumberOfUsersStillTooComeAtBatchMoreSophisticated(batch,user.queryTime) * this.area.calculateProbabilityOfEventRankingHigherThanK(batch.event, user.wishList.indexOf(batch.event),user.touristType) * TouristConstants.strictness > batch.event.getCapacityFromTill(user.queryTime,batch.startTime)+batch.getCurrentCapacity()){
+                        if(this.area.calculateNumberOfUsersStillTooComeAtBatchMoreSophisticated(batch,user.queryTime) * this.area.calculateProbabilityOfEventRankingHigherThanK(batch.event, user.wishList.indexOf(batch.event)) * TouristConstants.strictness > batch.event.getCapacityFromTill(user.queryTime,batch.startTime)+batch.getCurrentCapacity()){
                             batch.blockList.add(user);
                         }
 

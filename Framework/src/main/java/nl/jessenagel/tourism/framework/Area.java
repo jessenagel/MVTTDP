@@ -10,8 +10,7 @@ public class Area {
     public List<User> users;
     public Map<Location, Map<Location, TouristTime>> travelTimes;
     public List<Location> overnightLocations;
-    public List<TouristType> touristTypes;
-
+    public List<Event> baseRanking;
     public int numberOfUsers;
     public int lengthOfWishlist;
     public boolean simplified; //Use the simplified version with types instead of wishlists
@@ -21,19 +20,9 @@ public class Area {
         users = new ArrayList<>();
         events = new HashMap<>();
         travelTimes = new HashMap<>();
-        touristTypes = new ArrayList<>();
+        baseRanking = new ArrayList<>();
     }
 
-
-    private TouristType getTouristTypeByName(String touristTypeString) {
-        for (TouristType touristType : this.touristTypes) {
-            if (touristType.name.equals(touristTypeString)) {
-                return touristType;
-            }
-        }
-        System.err.println("Requested a touristType which does not exist: " + touristTypeString);
-        return null;
-    }
 
     public void setOvernightLocations() {
         List<Location> overnightLocations = new ArrayList<>();
@@ -110,16 +99,6 @@ public class Area {
         result.rebalance();
         return result;
     }
-    public void setEventTypes() {
-        for (Event event : this.events.values()) {
-            String genericName = event.name.replaceAll("\\d", "");
-            for (TouristType touristType : this.touristTypes) {
-                if (touristType.bonusEvents.contains(genericName)) {
-                    event.touristTypes.add(touristType);
-                }
-            }
-        }
-    }
 
     public static int poissonRNG(double lambda) {
         Random poissionGenerator = new Random(TouristConstants.seed);
@@ -151,52 +130,19 @@ public class Area {
         return totalSpaces;
     }
 
-    public int calcNumberOfSpacesLeftForType(TouristTime touristTime, TouristType touristType) {
-        int totalSpaces = 0;
-        for (Event event : this.events.values()) {
-            if (event.touristTypes.contains(touristType)) {
-                totalSpaces += event.getCapacityRestOfDay(touristTime);
-            }
-        }
-        return totalSpaces;
-    }
 
-    public List<Event> getEventsOfType(TouristType touristType) {
-        List<Event> eventsOfType = new ArrayList<>();
-        for (Event event : this.events.values()) {
-            if (event.touristTypes.contains(touristType)) {
-                eventsOfType.add(event);
-            }
-        }
-        return eventsOfType;
-    }
 
-    public void blockUserForType(User user, TouristType touristType) {
-        for (Event event : this.getEventsOfType(touristType)) {
-            event.blockList.add(user);
-        }
-    }
 
     public TouristTime getTimeLeftInDay(TouristTime currentTime) {
         return TouristTime.difference(TouristConstants.closeTime, currentTime);
     }
-
-    public double calculateExpectedValueOfUsersStillTooCome(Event event, TouristTime currentTime) {
-        double expectedUtility = 0;
-        for (TouristType touristType : this.touristTypes) {
-            //Number of expected users of type / number of places * expected utility of this type
-            expectedUtility += (this.getTimeLeftInDay(currentTime).toMinutes() / 420 * TouristConstants.lambda) / event.getCapacityRestOfDay(currentTime) * Math.pow(10 * Math.exp(Math.pow(touristType.baseRanking.indexOf(event) + 1.0, 2) / (-TouristConstants.BETA)), 2) * touristType.probability;
-        }
-        return expectedUtility;
-    }
-
     public void generateWishLists() {
         //Use thurstonian model to create rankings
         Map<Event, Double> zMap = new HashMap<>();
         for (User user : this.users) {
             int i = 0;
-            for (Event event : user.touristType.baseRanking) {
-                zMap.put(event, 16 * TouristConstants.heterogeneity * generator.nextGaussian() + (1 - TouristConstants.heterogeneity) * 2 * user.touristType.baseRanking.indexOf(event));
+            for (Event event : this.baseRanking) {
+                zMap.put(event, 16 * TouristConstants.heterogeneity * generator.nextGaussian() + (1 - TouristConstants.heterogeneity) * 2 * this.baseRanking.indexOf(event));
                 i++;
             }
 
@@ -212,13 +158,27 @@ public class Area {
 
     }
 
-    public Double calculateExpectedValueOfUsersStillTooComeAtBatch(Batch batch, TouristTime currentTime) {
-        double expectedUtility = 0;
-        for (TouristType touristType : this.touristTypes) {
-            //Number of expected users of type / number of places * expected utility of this type
+//    public Double calculateExpectedValueOfUsersStillTooComeAtBatch(Batch batch, TouristTime currentTime) {
+//        double expectedUtility = 0;
+//        for (TouristType touristType : this.touristTypes) {
+//            //Number of expected users of type / number of places * expected utility of this type
+////
+////            int numberOfUsersToCome = 0;
+////            if(TouristConstants.poisson.equals("inhomogeneous")) {
+////                for (int hour = currentTime.hour; hour < 24; hour++) {
+////                    if (hour == currentTime.hour) {
+////                        numberOfUsersToCome += (double) (60 - currentTime.minute) / 60.0 * TouristConstants.lambda * TouristConstants.arrivalRate[hour] / 100.0;
+////                    } else {
+////                        numberOfUsersToCome += TouristConstants.lambda * TouristConstants.arrivalRate[hour] / 100.0;
+////                    }
+////                }
+////            }else{//TODO: CHANGED PARAMETERS OF TIMING!!! CHANGE!!!
+////                numberOfUsersToCome += TouristConstants.lambda * (TouristConstants.closeTime.toMinutes() - currentTime.toMinutes()) / (TouristConstants.closeTime.toMinutes() - TouristConstants.openTime.toMinutes());
+////            }
+//
 //
 //            int numberOfUsersToCome = 0;
-//            if(TouristConstants.poisson.equals("inhomogeneous")) {
+//            if (TouristConstants.poisson.equals("inhomogeneous")) {
 //                for (int hour = currentTime.hour; hour < 24; hour++) {
 //                    if (hour == currentTime.hour) {
 //                        numberOfUsersToCome += (double) (60 - currentTime.minute) / 60.0 * TouristConstants.lambda * TouristConstants.arrivalRate[hour] / 100.0;
@@ -226,27 +186,13 @@ public class Area {
 //                        numberOfUsersToCome += TouristConstants.lambda * TouristConstants.arrivalRate[hour] / 100.0;
 //                    }
 //                }
-//            }else{//TODO: CHANGED PARAMETERS OF TIMING!!! CHANGE!!!
+//            } else {//TODO: CHANGED PARAMETERS OF TIMING!!! CHANGE!!!
 //                numberOfUsersToCome += TouristConstants.lambda * (TouristConstants.closeTime.toMinutes() - currentTime.toMinutes()) / (TouristConstants.closeTime.toMinutes() - TouristConstants.openTime.toMinutes());
 //            }
-
-
-            int numberOfUsersToCome = 0;
-            if (TouristConstants.poisson.equals("inhomogeneous")) {
-                for (int hour = currentTime.hour; hour < 24; hour++) {
-                    if (hour == currentTime.hour) {
-                        numberOfUsersToCome += (double) (60 - currentTime.minute) / 60.0 * TouristConstants.lambda * TouristConstants.arrivalRate[hour] / 100.0;
-                    } else {
-                        numberOfUsersToCome += TouristConstants.lambda * TouristConstants.arrivalRate[hour] / 100.0;
-                    }
-                }
-            } else {//TODO: CHANGED PARAMETERS OF TIMING!!! CHANGE!!!
-                numberOfUsersToCome += TouristConstants.lambda * (TouristConstants.closeTime.toMinutes() - currentTime.toMinutes()) / (TouristConstants.closeTime.toMinutes() - TouristConstants.openTime.toMinutes());
-            }
-            expectedUtility += (double) numberOfUsersToCome / batch.event.getCapacityRestOfDay(currentTime) * Math.pow(10 * Math.exp(Math.pow(touristType.baseRanking.indexOf(batch.event) + 1.0, 2) / (-TouristConstants.BETA)), 2) * touristType.probability;
-        }
-        return expectedUtility;
-    }
+//            expectedUtility += (double) numberOfUsersToCome / batch.event.getCapacityRestOfDay(currentTime) * Math.pow(10 * Math.exp(Math.pow(touristType.baseRanking.indexOf(batch.event) + 1.0, 2) / (-TouristConstants.BETA)), 2) * touristType.probability;
+//        }
+//        return expectedUtility;
+//    }
     public Double calculateNumberOfUsersStillTooComeAtBatch(Batch batch, TouristTime currentTime) {
         double numberOfUsersToCome = 0;
             if (TouristConstants.poisson.equals("inhomogeneous")) {
@@ -280,10 +226,10 @@ public class Area {
         }
         return numberOfUsersToCome;
     }
-    public double calculateProbabilityOfEventRankingHigherThanK(Event event, int ranking, TouristType touristType){
+    public double calculateProbabilityOfEventRankingHigherThanK(Event event, int ranking){
         double probability = 0.0;
         for(int i = 1; i <= ranking; i++){
-            double addition = 1.0 /touristType.baseRanking.size() + 1.0/ (touristType.baseRanking.size()-1.0) * (touristType.baseRanking.indexOf(event)+1-touristType.baseRanking.size()/2.0)/TouristConstants.sigma * mu(i,touristType.baseRanking.size());
+            double addition = 1.0 /this.baseRanking.size() + 1.0/ (this.baseRanking.size()-1.0) * (this.baseRanking.indexOf(event)+1-this.baseRanking.size()/2.0)/TouristConstants.sigma * mu(i,this.baseRanking.size());
             if(addition > 0){
                 probability += addition;
             }
@@ -311,12 +257,6 @@ public class Area {
             User user = new User();
             user.name = Integer.toString(i);
             user.groupSize = (1);
-            double random = generator.nextDouble();
-            if (random < TouristConstants.probabilitiesOfTypes[0]) {
-                user.touristType = this.getTouristTypeByName("gastronomical");
-            } else {
-                user.touristType = this.getTouristTypeByName("cultural");
-            }
             user.start = this.getRandomOvernightLocation();
             user.end = this.getRandomOvernightLocation();
             user.startEvent = new Event();
@@ -358,12 +298,6 @@ public class Area {
                 User user = new User();
                 user.name = hour + "_" + i;
                 user.groupSize = (1);
-                double random = generator.nextDouble();
-                if (random < TouristConstants.probabilitiesOfTypes[0]) {
-                    user.touristType = this.getTouristTypeByName("gastronomical");
-                } else {
-                    user.touristType = this.getTouristTypeByName("cultural");
-                }
                 user.start = this.getRandomOvernightLocation();
                 user.end = this.getRandomOvernightLocation();
                 user.startEvent = new Event();

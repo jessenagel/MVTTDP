@@ -1,7 +1,6 @@
 package nl.jessenagel.tourism.framework;
 
 public final class TouristConstants {
-    public static String version = "simplified"; //Use the simplified version with types instead of wishlists
     public static double lambda = 10;
     public static int seed = 4;
     public static double BETA = 40;
@@ -11,7 +10,6 @@ public final class TouristConstants {
     public static String inputFolder = "/export/scratch1/jmn/IdeaProjects/TouristTrip/inputfiles/amsterdam/";
 
     public static boolean knownLambda = true; //Can be set to true if the arrival rate of users is known beforehand
-    public static double[] probabilitiesOfTypes = new double[]{1, 0.0};
     public static String distanceType = "file"; //Either euclidean distance for simple coordinates or 'file' if read from file.
     public static double WEIGHT_1 = 1.0;
     public static double WEIGHT_2 = -1.0;

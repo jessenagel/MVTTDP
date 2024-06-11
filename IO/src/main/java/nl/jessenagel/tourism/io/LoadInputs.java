@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-import org.json.simple.JSONArray;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -23,7 +23,6 @@ public class LoadInputs {
             try {
                 TouristConstants.folder = (String) parameters.get("folder");
                 TouristConstants.inputFolder = (String) parameters.get("inputFolder");
-                TouristConstants.version = (String) parameters.get("version");
                 TouristConstants.algorithm = (String) parameters.get("algorithm");
                 TouristConstants.distanceType = (String) parameters.get("distanceType");
                 TouristConstants.WEIGHT_1 = (Double) parameters.get("weightOne");
@@ -206,28 +205,18 @@ public class LoadInputs {
         area.users = area.users.subList(0, area.numberOfUsers);
     }
 
-    public static void readTypes(Area area) {
+    public static void readRanking(Area area) {
         try {
             File input = new File(TouristConstants.inputFolder + "types");
             Scanner userScanner = new Scanner(input);
             while (userScanner.hasNextLine()) {
                 Scanner lineScanner = new Scanner(userScanner.nextLine());
                 lineScanner.useDelimiter(";");
-                TouristType touristType = new TouristType();
-                touristType.name = lineScanner.next();
-                File rankingFile =  new File(TouristConstants.inputFolder + "ranking_" + touristType.name + TouristConstants.index);
+
+                File rankingFile =  new File(TouristConstants.inputFolder + "ranking_" + TouristConstants.index);
                 Scanner rankingLineScanner = new Scanner(rankingFile);
                 while(rankingLineScanner.hasNextLine()){
-                    touristType.baseRanking.add(area.events.get(rankingLineScanner.nextLine()));
-                }
-                while (lineScanner.hasNext()) {
-                    touristType.bonusEvents.add(lineScanner.next());
-                }
-                area.touristTypes.add(touristType);
-                try {
-                    touristType.probability = TouristConstants.probabilitiesOfTypes[area.touristTypes.indexOf(touristType)];
-                }catch (IndexOutOfBoundsException e){
-                    System.err.println("Not enough probabilities for the touristtypes.");
+                    area.baseRanking.add(area.events.get(rankingLineScanner.nextLine()));
                 }
             }
         } catch (FileNotFoundException e) {

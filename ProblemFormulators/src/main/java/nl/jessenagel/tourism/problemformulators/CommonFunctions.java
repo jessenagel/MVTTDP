@@ -8,24 +8,6 @@ import nl.jessenagel.tourism.algorithmics.*;
 public class CommonFunctions {
     public static Random generator = new Random(TouristConstants.seed);
 
-    public static void createScoreFunctions(Area area) {
-        for (User user : area.users) {
-            if (!area.simplified) {
-                for (int i = 0; i < user.wishList.size(); i++) {
-                    user.scoreFunction.put(user.wishList.get(i), Math.pow(10 * Math.exp(Math.pow(i + 1.0, 2) / (-TouristConstants.BETA)), 2));
-                }
-            } else {
-                for (Event event : area.events.values()) {
-                    if (event.touristTypes.contains(user.touristType)) {
-                        user.scoreFunction.put(event, 200.0);
-                    } else {
-                        user.scoreFunction.put(event, 50.0);
-                    }
-                }
-            }
-        }
-    }
-
     public static void query(User user, Area area, int numberOfALlowedBookings) {
 //        System.out.println(user.queryTime.toMinutes());
         user.queryTime.print();

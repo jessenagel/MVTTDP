@@ -7,7 +7,6 @@ public class User{
     public String name;
     public TouristTime endTime;
     public boolean isScheduled;
-    public TouristType touristType;
     public ArrayList<Event> assignment;
     public double runTime;
     public int priority;
