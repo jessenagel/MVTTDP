@@ -167,7 +167,7 @@ public class LoadInputs {
 
     public static void readRanking(Area area) {
         try {
-            File rankingFile = new File(TouristConstants.inputFolder + "ranking_" + TouristConstants.index);
+            File rankingFile = new File(TouristConstants.inputFolder + "ranking" + TouristConstants.index);
             Scanner rankingLineScanner = new Scanner(rankingFile);
             while (rankingLineScanner.hasNextLine()) {
                 area.baseRanking.add(area.events.get(rankingLineScanner.nextLine()));
