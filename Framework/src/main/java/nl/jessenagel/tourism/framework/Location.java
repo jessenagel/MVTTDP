@@ -10,6 +10,6 @@ public class Location {
     public boolean isEvent;
     public double latitude,longitude;
     public Location(){
-        events = new HashMap();
+        events = new HashMap<>();
     }
 }

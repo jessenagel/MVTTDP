@@ -1,25 +1,24 @@
 package nl.jessenagel.tourism.io;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.*;
+
 
 import nl.jessenagel.tourism.framework.*;
+
 public class LoadInputs {
 
-    public static void readParameterFile(String fileLocation){
-        JSONParser jsonParser = new JSONParser();
-        try (FileReader reader = new FileReader(fileLocation))
-        {
+    public static void readParameterFile(String fileLocation) {
+        try (FileReader reader = new FileReader(fileLocation)) {
             //Read JSON file
-            Object obj = jsonParser.parse(reader);
+            JSONTokener jsonTokener = new JSONTokener(reader);
 
-            JSONObject parameters = (JSONObject) obj;
+            JSONObject parameters = new JSONObject(reader);
             try {
                 TouristConstants.folder = (String) parameters.get("folder");
                 TouristConstants.inputFolder = (String) parameters.get("inputFolder");
@@ -45,16 +44,17 @@ public class LoadInputs {
                 TouristConstants.arrivalProcess = (String) parameters.get("arrivalProcess");
                 TouristConstants.strictness = (Double) parameters.get("strictness");
                 TouristConstants.experimentID = (String) parameters.get("experimentID");
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 System.err.println("Missing parameter, using defaults");
             }
 
-        } catch (FileNotFoundException | ParseException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.err.println("Did not find file: " + fileLocation);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
     public static void readLocations(Area area) {
         File locationFile = new File(TouristConstants.inputFolder + "locations" + TouristConstants.index);
 
@@ -68,7 +68,7 @@ public class LoadInputs {
                 location.name = locationLineScanner.next();
                 location.latitude = locationLineScanner.nextDouble();
                 location.longitude = locationLineScanner.nextDouble();
-                if (location.name.replaceAll("\\d", "").equals("Hotel")||location.name.replaceAll("\\d", "").equals("hotel")) {
+                if (location.name.replaceAll("\\d", "").equals("Hotel") || location.name.replaceAll("\\d", "").equals("hotel")) {
                     location.isOvernightLocation = true;
                 }
                 area.locations.put(location.name, location);
@@ -76,13 +76,14 @@ public class LoadInputs {
             area.setOvernightLocations();
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.err.println("Did not find file: " + TouristConstants.inputFolder + "locations" + TouristConstants.index);
+
         }
     }
 
     public static void readDistances(Area area) {
         if (TouristConstants.distanceType.equals("file")) {
-            File distanceFile = new File(TouristConstants.inputFolder + "distancesnew");
+            File distanceFile = new File(TouristConstants.inputFolder + "distances");
             for (Location location : area.locations.values()) {
                 area.travelTimes.put(location, new HashMap<>());
                 area.travelTimes.get(location).put(location, new TouristTime("0"));
@@ -98,14 +99,15 @@ public class LoadInputs {
                     String timeString = time.split("\\.")[0];
                     double timeValue = Integer.parseInt(timeString);
                     timeValue /= 60.0;
-                        if(timeValue== 0){
-                        timeValue =1.0;
+                    if (timeValue == 0) {
+                        timeValue = 1.0;
                     }
                     timeString = String.valueOf((int) Math.floor(timeValue));
                     area.travelTimes.get(area.locations.get(from)).put(area.locations.get(to), new TouristTime(timeString));
                 }
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                System.err.println("Did not find file: " + TouristConstants.inputFolder + "distances");
+
             }
         } else if (TouristConstants.distanceType.equals("euclidean")) {
             for (Location from : area.locations.values()) {
@@ -159,68 +161,18 @@ public class LoadInputs {
 
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void importUsers(Area area) {
-        try {
-            File input = new File(TouristConstants.inputFolder + "users0.dat");
-            Scanner userScanner = new Scanner(input);
-            while (userScanner.hasNextLine()) {
-                Scanner lineScanner = new Scanner(userScanner.nextLine());
-                lineScanner.useDelimiter(";");
-                User user = new User();
-                user.name = lineScanner.next();
-                user.queryTime = new TouristTime(lineScanner.next());
-                user.startTime = new TouristTime(lineScanner.next());
-                user.endTime = new TouristTime(lineScanner.next());
-                user.wishList = new ArrayList<>();
-                user.start = area.locations.get(lineScanner.next());
-                user.startEvent = new Event();
-                user.startEvent.exit = user.start;
-                user.end = area.locations.get(lineScanner.next());
-                user.endEvent = new Event();
-                user.endEvent.entrance = user.end;
-                int i = 0;
-
-                while (lineScanner.hasNext()) {
-                    Event event = area.events.get(lineScanner.next());
-                    if (event == null) {
-                        continue;
-                    }
-                    user.wishList.add(event);
-                    user.groupSizePerEvent.put(event, lineScanner.nextInt());
-                    i++;
-                    if (i >= area.lengthOfWishlist) {
-                        break;
-                    }
-                }
-                area.users.add(user);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        Collections.shuffle(area.users, new Random(TouristConstants.seed));
-        area.users = area.users.subList(0, area.numberOfUsers);
+            System.err.println("Did not find file: " + TouristConstants.inputFolder + "events");        }
     }
 
     public static void readRanking(Area area) {
         try {
-            File input = new File(TouristConstants.inputFolder + "types");
-            Scanner userScanner = new Scanner(input);
-            while (userScanner.hasNextLine()) {
-                Scanner lineScanner = new Scanner(userScanner.nextLine());
-                lineScanner.useDelimiter(";");
-
-                File rankingFile =  new File(TouristConstants.inputFolder + "ranking_" + TouristConstants.index);
+                File rankingFile = new File(TouristConstants.inputFolder + "ranking_" + TouristConstants.index);
                 Scanner rankingLineScanner = new Scanner(rankingFile);
-                while(rankingLineScanner.hasNextLine()){
+                while (rankingLineScanner.hasNextLine()) {
                     area.baseRanking.add(area.events.get(rankingLineScanner.nextLine()));
                 }
-            }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+            System.err.println("Did not find file: " + TouristConstants.inputFolder + "ranking_" + TouristConstants.index);
+    }
     }
 }

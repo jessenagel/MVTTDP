@@ -1,7 +1,6 @@
 package nl.jessenagel.tourism.io;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -34,7 +33,8 @@ public class WriteOutputs {
             }
             output.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("IOException");
+
         }
     }
     public static void exportHappiness(Area area, String algorithm) {
@@ -83,7 +83,7 @@ public class WriteOutputs {
             out.flush();
             out.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("IOException");
         }
     }
 
@@ -152,13 +152,27 @@ public class WriteOutputs {
                 break;
         }
         System.out.println("Number of zeroes:" + numberOfZeros);
+        JSONObject results = getJsonObject(area, runTime);
+        new File("outputfiles/results/"+TouristConstants.experimentID).mkdirs();
+        try (FileWriter file = new FileWriter(folder+"outputfiles/results/"+TouristConstants.experimentID+"/results"+s+".json")) {
+            //We can write any JSONArray or JSONObject instance to the file
+            file.write(results.toString(4));
+            file.flush();
+
+        } catch (IOException e) {
+            System.err.println("IOException");
+        }
+
+    }
+
+    private static JSONObject getJsonObject(Area area, long runTime) {
         JSONObject results = new JSONObject();
         results.put("seed",TouristConstants.seed);
-        results.put("beta",TouristConstants.BETA);
+        results.put("b0.jseta",TouristConstants.BETA);
         results.put("lambda",TouristConstants.lambda);
         results.put("weight1",TouristConstants.WEIGHT_1);
         results.put("weight2",TouristConstants.WEIGHT_2);
-        results.put("runTime",runTime);
+        results.put("runTime", runTime);
         results.put("heterogeneity",TouristConstants.heterogeneity);
         results.put("strictness",TouristConstants.strictness);
         results.put("threshold",TouristConstants.threshold);
@@ -169,22 +183,14 @@ public class WriteOutputs {
         JSONArray times = new JSONArray();
 
         for(User user: area.users){
-            scores.add(user.happiness);
-            times.add(user.runTime);
+            scores.put(user.happiness);
+            times.put(user.runTime);
         }
         results.put("scores",scores);
         results.put("times",times);
-        new File("outputfiles/results/"+TouristConstants.experimentID).mkdirs();
-        try (FileWriter file = new FileWriter(folder+"outputfiles/results/"+TouristConstants.experimentID+"/results"+s+".json")) {
-            //We can write any JSONArray or JSONObject instance to the file
-            file.write(results.toJSONString());
-            file.flush();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        return results;
     }
+
     public static void exportUtilization(Area area ){
             Date date = new Date();
             Format formatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss:SS");
@@ -200,7 +206,7 @@ public class WriteOutputs {
             out.close();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("IOException");
         }
 
     }

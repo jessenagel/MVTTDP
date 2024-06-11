@@ -82,7 +82,7 @@ public class Event {
                 blocked.add(batch);
             }
         }
-        if (batches.size() == 0) {
+        if (batches.isEmpty()) {
             return 0.0;
         }
         return (double) blocked.size() / (double) batches.size();

@@ -53,7 +53,6 @@ public class Batch {
         user.schedule.remove(this);}
         catch(NullPointerException e){
             System.err.println("Tried to unbook nonbooked events!");
-            e.printStackTrace();
             return false;
         }
         return true;

@@ -66,26 +66,13 @@ public class ILS {
                 double minProfit = Generic.calcScore(tempSolution, this.user, area);
                 tempSolution.remove(batch);
                 if (index == tempSolution.size()) {
-                    if (index == 0) {
-                        if (insert(tempSolution, index, null, minProfit, MAX_DEPTH)) {
-                            solution = tempSolution;
-                        }
-                    } else {
-                        if (insert(tempSolution, index, null, minProfit, MAX_DEPTH)) {
-                            solution = tempSolution;
-                        }
+                    if (insert(tempSolution, index, null, minProfit, MAX_DEPTH)) {
+                        solution = tempSolution;
                     }
                 } else {
-                    if (index == 0) {
-                        if (insert(tempSolution, index, tempSolution.get(index), minProfit, MAX_DEPTH)) {
-                            solution = tempSolution;
+                    if (insert(tempSolution, index, tempSolution.get(index), minProfit, MAX_DEPTH)) {
+                        solution = tempSolution;
 
-                        }
-                    } else {
-                        if (insert(tempSolution, index, tempSolution.get(index), minProfit, MAX_DEPTH)) {
-                            solution = tempSolution;
-
-                        }
                     }
                 }
             }
@@ -99,7 +86,7 @@ public class ILS {
         if (maxDepth <= 0) {
             return false;
         }
-        if (batches.size() > 0) {
+        if (!batches.isEmpty()) {
             if (batches.size() > this.maxLength || TouristTime.geq(batches.get(batches.size() - 1).endTime.increaseBy(area.travelTimes.get(batches.get(batches.size() - 1).event.exit).get(user.end)), user.endTime)) {
                 return false;
             }
@@ -180,7 +167,7 @@ public class ILS {
                 R = 1;
                 noImprove = 0;
             }
-            if (solution.size() == 0) {
+            if (solution.isEmpty()) {
                 return solution;
             }
             while (S >= solution.size()) {

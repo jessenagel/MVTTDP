@@ -40,6 +40,4 @@ public final class TouristConstants {
     public static String experimentID = "None";
     private TouristConstants() {
     }
-
-    ;
 }

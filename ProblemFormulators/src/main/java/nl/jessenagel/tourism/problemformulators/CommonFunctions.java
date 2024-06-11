@@ -35,7 +35,7 @@ public class CommonFunctions {
                 break;
         }
 
-        if (route.size() == 0) {
+        if (route.isEmpty()) {
             System.out.println("Could not create a schedule for " + user.name);
             return;
         }

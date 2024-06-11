@@ -158,41 +158,7 @@ public class Area {
 
     }
 
-//    public Double calculateExpectedValueOfUsersStillTooComeAtBatch(Batch batch, TouristTime currentTime) {
-//        double expectedUtility = 0;
-//        for (TouristType touristType : this.touristTypes) {
-//            //Number of expected users of type / number of places * expected utility of this type
-////
-////            int numberOfUsersToCome = 0;
-////            if(TouristConstants.poisson.equals("inhomogeneous")) {
-////                for (int hour = currentTime.hour; hour < 24; hour++) {
-////                    if (hour == currentTime.hour) {
-////                        numberOfUsersToCome += (double) (60 - currentTime.minute) / 60.0 * TouristConstants.lambda * TouristConstants.arrivalRate[hour] / 100.0;
-////                    } else {
-////                        numberOfUsersToCome += TouristConstants.lambda * TouristConstants.arrivalRate[hour] / 100.0;
-////                    }
-////                }
-////            }else{//TODO: CHANGED PARAMETERS OF TIMING!!! CHANGE!!!
-////                numberOfUsersToCome += TouristConstants.lambda * (TouristConstants.closeTime.toMinutes() - currentTime.toMinutes()) / (TouristConstants.closeTime.toMinutes() - TouristConstants.openTime.toMinutes());
-////            }
-//
-//
-//            int numberOfUsersToCome = 0;
-//            if (TouristConstants.poisson.equals("inhomogeneous")) {
-//                for (int hour = currentTime.hour; hour < 24; hour++) {
-//                    if (hour == currentTime.hour) {
-//                        numberOfUsersToCome += (double) (60 - currentTime.minute) / 60.0 * TouristConstants.lambda * TouristConstants.arrivalRate[hour] / 100.0;
-//                    } else {
-//                        numberOfUsersToCome += TouristConstants.lambda * TouristConstants.arrivalRate[hour] / 100.0;
-//                    }
-//                }
-//            } else {//TODO: CHANGED PARAMETERS OF TIMING!!! CHANGE!!!
-//                numberOfUsersToCome += TouristConstants.lambda * (TouristConstants.closeTime.toMinutes() - currentTime.toMinutes()) / (TouristConstants.closeTime.toMinutes() - TouristConstants.openTime.toMinutes());
-//            }
-//            expectedUtility += (double) numberOfUsersToCome / batch.event.getCapacityRestOfDay(currentTime) * Math.pow(10 * Math.exp(Math.pow(touristType.baseRanking.indexOf(batch.event) + 1.0, 2) / (-TouristConstants.BETA)), 2) * touristType.probability;
-//        }
-//        return expectedUtility;
-//    }
+
     public Double calculateNumberOfUsersStillTooComeAtBatch(Batch batch, TouristTime currentTime) {
         double numberOfUsersToCome = 0;
             if (TouristConstants.poisson.equals("inhomogeneous")) {

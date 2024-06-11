@@ -19,7 +19,7 @@ public class TouristTime {
         List<TouristTime> times = new ArrayList<>();
         int currentTimeInMinutes = openTime.toMinutes();
         while(currentTimeInMinutes <= closeTime.toMinutes()){
-            TouristTime nextTime = new TouristTime("0:0:"+ Integer.toString(currentTimeInMinutes));
+            TouristTime nextTime = new TouristTime("0:0:"+ currentTimeInMinutes);
             nextTime.rebalance();
             times.add(nextTime);
             currentTimeInMinutes +=1;
@@ -114,10 +114,7 @@ public class TouristTime {
         if (one.minute < two.minute){
             return true;
         }
-        if (one.minute > two.minute){
-            return false;
-        }
-        return true;
+        return one.minute <= two.minute;
     }
 
     public static boolean geq(TouristTime one, TouristTime two) {
@@ -138,10 +135,7 @@ public class TouristTime {
         if (one.minute > two.minute){
             return true;
         }
-        if (one.minute < two.minute){
-            return false;
-        }
-        return true;
+        return one.minute >= two.minute;
     }
 
     public static boolean greater(TouristTime one, TouristTime two) {
@@ -159,10 +153,7 @@ public class TouristTime {
             return false;
         }
 
-        if (one.minute > two.minute){
-            return true;
-        }
-        return false;
+        return one.minute > two.minute;
     }
     public static boolean less(TouristTime one, TouristTime two) {
         if (one.day < two.day){
@@ -179,10 +170,7 @@ public class TouristTime {
             return false;
         }
 
-        if (one.minute < two.minute){
-            return true;
-        }
-        return false;
+        return one.minute < two.minute;
     }
 
     public int toMinutes() {

@@ -17,11 +17,7 @@ public class Generic {
 
                 }
             } else {
-                if (previousBatch == null) {
-                    score += user.scoreFunction.get(batch.event);
-                } else {
-                    score += user.scoreFunction.get(batch.event);
-                }
+                score += user.scoreFunction.get(batch.event);
             }
 
             previousBatch = batch;

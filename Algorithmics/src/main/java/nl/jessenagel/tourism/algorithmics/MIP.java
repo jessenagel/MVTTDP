@@ -120,7 +120,7 @@ public class MIP {
                             }
                         }
                     } catch (IloException e) {
-                        e.printStackTrace();
+                        System.err.println("IloException");
                     }
                 }
             }
@@ -350,7 +350,6 @@ public class MIP {
                     }
                 }
                 cplex.addLe(lhs, event.capacity).setName("constraint8_" + i10);
-                ;
                 i10++;
             }
         }
