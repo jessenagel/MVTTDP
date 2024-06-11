@@ -18,7 +18,7 @@ public class LoadInputs {
             //Read JSON file
             JSONTokener jsonTokener = new JSONTokener(reader);
 
-            JSONObject parameters = new JSONObject(reader);
+            JSONObject parameters = new JSONObject(jsonTokener);
             try {
                 TouristConstants.folder = (String) parameters.get("folder");
                 TouristConstants.inputFolder = (String) parameters.get("inputFolder");
