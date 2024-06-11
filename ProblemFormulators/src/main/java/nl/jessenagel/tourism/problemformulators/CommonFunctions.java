@@ -26,13 +26,6 @@ public class CommonFunctions {
                 fullEnumeration.area = area;
                 route = fullEnumeration.solve(user.wishList);
                 break;
-            case "DSSRA":
-                DSSRA dssra = new DSSRA();
-                dssra.user = user;
-                dssra.area = area;
-                dssra.createListOfBatches(area);
-                route = dssra.dynamicProgramming();
-                break;
         }
 
         if (route.isEmpty()) {
