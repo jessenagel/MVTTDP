@@ -19,7 +19,7 @@ public class Main {
             System.err.println("ARE YOU SURE ABOUT THE DISTANCE TYPE!?");
             System.exit(5);
         }
-        mvttdp mvttdp = new mvttdp();
+        MVTTDP mvttdp = new MVTTDP();
         mvttdp.create();
         mvttdp.run();
     }
