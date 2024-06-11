@@ -20,30 +20,30 @@ public class LoadInputs {
 
             JSONObject parameters = new JSONObject(jsonTokener);
             try {
-                TouristConstants.folder = (String) parameters.get("folder");
-                TouristConstants.inputFolder = (String) parameters.get("inputFolder");
-                TouristConstants.algorithm = (String) parameters.get("algorithm");
-                TouristConstants.distanceType = (String) parameters.get("distanceType");
-                TouristConstants.WEIGHT_1 = (Double) parameters.get("weightOne");
-                TouristConstants.WEIGHT_2 = (Double) parameters.get("weightTwo");
-                TouristConstants.openTime = new TouristTime((String) parameters.get("openTime"));
-                TouristConstants.closeTime = new TouristTime((String) parameters.get("closeTime"));
-                TouristConstants.startArrivals = new TouristTime((String) parameters.get("startArrivals"));
-                TouristConstants.endArrivals = new TouristTime((String) parameters.get("endArrivals"));
-                TouristConstants.dayOfEvents = Math.toIntExact((long) parameters.get("dayOfEvents"));
-                TouristConstants.BETA = (Double) parameters.get("beta");
-                TouristConstants.lambda = (Double) parameters.get("lambda");
-                TouristConstants.useBlocking = (Boolean) parameters.get("useBlocking");
-                TouristConstants.scoreFunction = (String) parameters.get("scoreFunction");
-                TouristConstants.method = (String) parameters.get("method");
-                TouristConstants.restrictNumberOfActivities = (Boolean) parameters.get("restrictActivities");
-                TouristConstants.heterogeneity = (double) parameters.get("heterogeneity");
-                TouristConstants.travelPenalty = (Boolean) parameters.get("travelPenalty");
-                TouristConstants.poisson = (String) parameters.get("poisson");
-                TouristConstants.capacityMultiplier = (double) parameters.get("capacityMultiplier");
-                TouristConstants.arrivalProcess = (String) parameters.get("arrivalProcess");
-                TouristConstants.strictness = (Double) parameters.get("strictness");
-                TouristConstants.experimentID = (String) parameters.get("experimentID");
+                TouristConstants.folder = parameters.getString("folder");
+                TouristConstants.inputFolder = parameters.getString("inputFolder");
+                TouristConstants.algorithm = parameters.getString("algorithm");
+                TouristConstants.distanceType = parameters.getString("distanceType");
+                TouristConstants.WEIGHT_1 = parameters.getDouble("weightOne");
+                TouristConstants.WEIGHT_2 = parameters.getDouble("weightTwo");
+                TouristConstants.openTime = new TouristTime(parameters.getString("openTime"));
+                TouristConstants.closeTime = new TouristTime(parameters.getString("closeTime"));
+                TouristConstants.startArrivals = new TouristTime(parameters.getString("startArrivals"));
+                TouristConstants.endArrivals = new TouristTime(parameters.getString("endArrivals"));
+                TouristConstants.dayOfEvents = Math.toIntExact( parameters.getLong("dayOfEvents"));
+                TouristConstants.BETA = parameters.getDouble("beta");
+                TouristConstants.lambda = parameters.getDouble("lambda");
+                TouristConstants.useBlocking = parameters.getBoolean("useBlocking");
+                TouristConstants.scoreFunction = parameters.getString("scoreFunction");
+                TouristConstants.method = parameters.getString("method");
+                TouristConstants.restrictNumberOfActivities = parameters.getBoolean("restrictActivities");
+                TouristConstants.heterogeneity = parameters.getDouble("heterogeneity");
+                TouristConstants.travelPenalty = parameters.getBoolean("travelPenalty");
+                TouristConstants.poisson = parameters.getString("poisson");
+                TouristConstants.capacityMultiplier = parameters.getDouble("capacityMultiplier");
+                TouristConstants.arrivalProcess = parameters.getString("arrivalProcess");
+                TouristConstants.strictness = parameters.getDouble("strictness");
+                TouristConstants.experimentID = parameters.getString("experimentID");
             } catch (NullPointerException e) {
                 System.err.println("Missing parameter, using defaults");
             }
@@ -161,18 +161,19 @@ public class LoadInputs {
 
 
         } catch (FileNotFoundException e) {
-            System.err.println("Did not find file: " + TouristConstants.inputFolder + "events");        }
+            System.err.println("Did not find file: " + TouristConstants.inputFolder + "events");
+        }
     }
 
     public static void readRanking(Area area) {
         try {
-                File rankingFile = new File(TouristConstants.inputFolder + "ranking_" + TouristConstants.index);
-                Scanner rankingLineScanner = new Scanner(rankingFile);
-                while (rankingLineScanner.hasNextLine()) {
-                    area.baseRanking.add(area.events.get(rankingLineScanner.nextLine()));
-                }
+            File rankingFile = new File(TouristConstants.inputFolder + "ranking_" + TouristConstants.index);
+            Scanner rankingLineScanner = new Scanner(rankingFile);
+            while (rankingLineScanner.hasNextLine()) {
+                area.baseRanking.add(area.events.get(rankingLineScanner.nextLine()));
+            }
         } catch (FileNotFoundException e) {
             System.err.println("Did not find file: " + TouristConstants.inputFolder + "ranking_" + TouristConstants.index);
-    }
+        }
     }
 }
