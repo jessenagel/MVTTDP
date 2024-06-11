@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <dependencies>
         <dependency>
-            <groupId>nl.jessenagel.tourism</groupId>
+            <groupId>nl.jessenagel.mvttdp</groupId>
             <artifactId>framework</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>nl.jessenagel.tourism</groupId>
+            <groupId>nl.jessenagel.mvttdp</groupId>
             <artifactId>informatics</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
@@ -23,8 +23,8 @@
     </dependencies>
 
     <parent>
-        <artifactId>tourism</artifactId>
-        <groupId>nl.jessenagel.tourism</groupId>
+        <artifactId>mvttdp</artifactId>
+        <groupId>nl.jessenagel.mvttdp</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>algorithmics</artifactId>

@@ -5,14 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
     <dependencies>
         <dependency>
-            <groupId>nl.jessenagel.tourism</groupId>
+            <groupId>nl.jessenagel.mvttdp</groupId>
             <artifactId>framework</artifactId>
         </dependency>
     </dependencies>
 
     <parent>
-        <artifactId>tourism</artifactId>
-        <groupId>nl.jessenagel.tourism</groupId>
+        <artifactId>mvttdp</artifactId>
+        <groupId>nl.jessenagel.mvttdp</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>informatics</artifactId>
