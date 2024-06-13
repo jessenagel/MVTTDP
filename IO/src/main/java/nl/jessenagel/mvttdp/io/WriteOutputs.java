@@ -13,80 +13,6 @@ import nl.jessenagel.mvttdp.framework.*;
 public class WriteOutputs {
     private static final String folder = TouristConstants.folder;
 
-    public static void exportUsers(Area area) {
-        try {
-            FileWriter output = new FileWriter(folder + "inputfiles/userfiles/users0.dat");
-            for (User user : area.users) {
-                output.write(user.name + ";");
-                output.write(user.queryTime.toString() + ";");
-                output.write(user.startTime.toString() + ";");
-                output.write(user.endTime.toString() + ";");
-                output.write(user.start.name + ";");
-                output.write(user.end.name);
-                for (Event event : user.wishList) {
-                    output.write(";" + event.name);
-                    output.write(";" + user.groupSizePerEvent.get(event));
-
-                }
-                output.write("\n");
-                output.flush();
-            }
-            output.close();
-        } catch (IOException e) {
-            System.err.println("IOException");
-
-        }
-    }
-    public static void exportHappiness(Area area, String algorithm) {
-        try {
-            Date date = new Date();
-            Format formatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss:SS");
-            String s = formatter.format(date);
-            FileWriter out = new FileWriter(folder + "outputfiles/results/happiness" + s + ".result");
-            out.write("Seed:" + TouristConstants.seed);
-            out.write(algorithm + "\n");
-            double sum = 0;
-            int numberOfZeros = 0;
-            boolean firstUser = true;
-            for (User user : area.users) {
-                switch (TouristConstants.scoreFunction){
-                    case "product":
-                        sum *=user.happiness;
-                        break;
-                    case "sum":
-                        sum +=user.happiness;
-                        break;
-                    case "maximin":
-                        if(user.happiness < sum || firstUser){
-                            sum = user.happiness;
-                            firstUser = false;
-                        }
-                        break;
-                }
-                if (user.happiness == 0) {
-                    numberOfZeros++;
-                }
-            }
-            double mean = 1 / (double) area.users.size() * sum;
-            double stDevSum = 0;
-            for (User user : area.users) {
-                stDevSum += Math.pow(user.happiness - mean, 2);
-            }
-            double stDev = Math.sqrt(1 / (double) (area.users.size() - 1) * stDevSum);
-            out.write(sum + "\n");
-            out.write(mean + "\n");
-            out.write(stDev + "\n");
-            out.write(numberOfZeros + "\n");
-            for (User user : area.users) {
-                out.write(user.happiness + "\n");
-            }
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            System.err.println("IOException");
-        }
-    }
-
     public static void exportJson(Area area,long runTime){
         Date date = new Date();
         Format formatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss:SS");
@@ -153,7 +79,8 @@ public class WriteOutputs {
         }
         System.out.println("Number of zeroes:" + numberOfZeros);
         JSONObject results = getJsonObject(area, runTime);
-        new File("outputfiles/results/"+TouristConstants.experimentID).mkdirs();
+        //noinspection ResultOfMethodCallIgnored
+        new File("outputfiles/results/" + TouristConstants.experimentID).mkdirs();
         try (FileWriter file = new FileWriter(folder+"outputfiles/results/"+TouristConstants.experimentID+"/results"+s+".json")) {
             //We can write any JSONArray or JSONObject instance to the file
             file.write(results.toString(4));

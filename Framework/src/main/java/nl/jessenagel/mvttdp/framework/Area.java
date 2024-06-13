@@ -1,19 +1,16 @@
 package nl.jessenagel.mvttdp.framework;
-import nl.jessenagel.mvttdp.framework.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import  org.apache.commons.math3.distribution.NormalDistribution;
 public class Area {
-    public static Random generator = new Random(TouristConstants.seed);
-    public Map<String, Event> events;
-    public Map<String, Location> locations;
-    public List<User> users;
-    public Map<Location, Map<Location, TouristTime>> travelTimes;
+    public static final Random generator = new Random(TouristConstants.seed);
+    public final Map<String, Event> events;
+    public final Map<String, Location> locations;
+    public final List<User> users;
+    public final Map<Location, Map<Location, TouristTime>> travelTimes;
     public List<Location> overnightLocations;
-    public List<Event> baseRanking;
+    public final List<Event> baseRanking;
     public int numberOfUsers;
-    public int lengthOfWishlist;
-    public boolean simplified; //Use the simplified version with types instead of wishlists
 
     public Area() {
         locations = new HashMap<>();
@@ -41,28 +38,6 @@ public class Area {
         return overnightLocations.get((int) random);
     }
 
-    private static TouristTime generateTime() {
-        Random generator = new Random(TouristConstants.seed);
-        double number;
-        double a = 9;
-        double d = a - 1.0 / 0.3;
-        double c = 1.0 / Math.sqrt(9 * d);
-        while (true) {
-            double X = generator.nextGaussian();
-            double U = generator.nextDouble();
-            double v = Math.pow(1 + c * X, 3);
-            if (v > 0 && Math.log(U) < Math.pow(X, 2) / 2.0 + d - d * v + d * Math.log(v)) {
-                number = d * v;
-                break;
-            }
-        }
-        number = 420 + number * 30;
-        TouristTime result = new TouristTime("0");
-        result.minute = (int) Math.floor(number);
-        result.rebalance();
-        return result;
-    }
-
     private static TouristTime generateTimeUniform() {
         double number;
         number = 420 + generator.nextDouble() * 540;
@@ -88,7 +63,7 @@ public class Area {
                 day = Math.floor(generator.nextDouble() * (TouristConstants.dayOfEvents + 1));
                 break;
             default:
-                System.err.println("Unknown arrivalprocess: " + TouristConstants.arrivalProcess + ". Defaulting to during");
+                System.err.println("Unknown arrival process: " + TouristConstants.arrivalProcess + ". Defaulting to during");
                 day = TouristConstants.dayOfEvents;
                 break;
         }
@@ -101,14 +76,14 @@ public class Area {
     }
 
     public static int poissonRNG(double lambda) {
-        Random poissionGenerator = new Random(TouristConstants.seed);
+        Random poissonGenerator = new Random(TouristConstants.seed);
         double Lleft = lambda;
         int step = 500;
         int k = 0;
         double p = 1;
         do {
             k++;
-            p *= poissionGenerator.nextDouble();
+            p *= poissonGenerator.nextDouble();
             while (p < 1 && Lleft > 0) {
                 if (Lleft > step) {
                     p *= Math.exp(step);
@@ -122,32 +97,17 @@ public class Area {
         return k - 1;
     }
 
-    public int calcNumberOfSpacesLeft(TouristTime time) {
-        int totalSpaces = 0;
-        for (Event event : this.events.values()) {
-            totalSpaces += event.getCapacityRestOfDay(time);
-        }
-        return totalSpaces;
-    }
 
-
-
-
-    public TouristTime getTimeLeftInDay(TouristTime currentTime) {
-        return TouristTime.difference(TouristConstants.closeTime, currentTime);
-    }
     public void generateWishLists() {
-        //Use thurstonian model to create rankings
+        //Use Thurstonian model to create rankings
         Map<Event, Double> zMap = new HashMap<>();
         for (User user : this.users) {
-            int i = 0;
             for (Event event : this.baseRanking) {
                 zMap.put(event, 16 * TouristConstants.heterogeneity * generator.nextGaussian() + (1 - TouristConstants.heterogeneity) * 2 * this.baseRanking.indexOf(event));
-                i++;
             }
 
             user.wishList = zMap.entrySet().stream()
-                    .sorted(Comparator.comparing(Map.Entry::getValue, Comparator.naturalOrder()))
+                    .sorted(Map.Entry.comparingByValue(Comparator.naturalOrder()))
                     .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
 
@@ -158,22 +118,6 @@ public class Area {
 
     }
 
-
-    public Double calculateNumberOfUsersStillTooComeAtBatch(Batch batch, TouristTime currentTime) {
-        double numberOfUsersToCome = 0;
-            if (TouristConstants.poisson.equals("inhomogeneous")) {
-                for (int hour = currentTime.hour; hour < 24; hour++) {
-                    if (hour == currentTime.hour) {
-                        numberOfUsersToCome += (double) (60 - currentTime.minute) / 60.0 * TouristConstants.lambda * TouristConstants.arrivalRate[hour] / 100.0;
-                    } else {
-                        numberOfUsersToCome += TouristConstants.lambda * TouristConstants.arrivalRate[hour] / 100.0;
-                    }
-                }
-            } else {//TODO: CHANGED PARAMETERS OF TIMING!!! CHANGE!!!
-                numberOfUsersToCome += TouristConstants.lambda * (TouristConstants.endArrivals.toMinutes() - currentTime.toMinutes()) / (TouristConstants.endArrivals.toMinutes() - TouristConstants.startArrivals.toMinutes());
-            }
-        return numberOfUsersToCome;
-    }
 
     public Double calculateNumberOfUsersStillTooComeAtBatchMoreSophisticated(Batch batch, TouristTime currentTime) {
         double numberOfUsersToCome = 0;
@@ -218,7 +162,7 @@ public class Area {
         return distribution.inverseCumulativeProbability(input);
     }
     public void generateUsers(int numberOfUsers) {
-        Random generator = new Random(TouristConstants.seed);
+        new Random(TouristConstants.seed);
         for (int i = 0; i < numberOfUsers; i++) {
             User user = new User();
             user.name = Integer.toString(i);
@@ -257,7 +201,7 @@ public class Area {
     }
 
     public void generateUserInhomogeneous() {
-        Random generator = new Random(TouristConstants.seed);
+        new Random(TouristConstants.seed);
         for (int hour = 0; hour < 24; hour++) {
             numberOfUsers = poissonRNG(TouristConstants.lambda * TouristConstants.arrivalRate[hour] / 100);
             for (int i = 0; i < numberOfUsers; i++) {

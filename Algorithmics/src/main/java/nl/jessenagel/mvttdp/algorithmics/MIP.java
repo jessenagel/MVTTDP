@@ -3,15 +3,12 @@ package nl.jessenagel.mvttdp.algorithmics;
 import ilog.concert.*;
 import ilog.cplex.*;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import nl.jessenagel.mvttdp.framework.*;
 
 public class MIP {
 
-    private static final String folder = "/export/scratch1/jmn/IdeaProjects/TouristTrip/";
     private static final int MAX_ITERATIONS = 100;
     private static final double TRESHOLD_VALUE = 0.00001;
     private int currentRound = 0;
@@ -27,7 +24,7 @@ public class MIP {
     private static final double SUFFICIENTLY_LARGE = 100000000000.0;
     private boolean firstRound;
 
-    public void solve(Area area) throws IOException {
+    public void solve(Area area) {
         this.firstRound = true;
         sMapStar = new HashMap<>();
 
@@ -68,7 +65,7 @@ public class MIP {
                         double sum = 0;
 
                         for (int k = 0; k < this.area.users.size(); k++) {
-                            sum += Math.abs(Math.log(cplex.getValue(this.sMap.get(this.area.users.get(k)))) - +cplex.getValue(lMap.get(this.area.users.get(k))));
+                            sum += Math.abs(Math.log(cplex.getValue(this.sMap.get(this.area.users.get(k)))) - cplex.getValue(lMap.get(this.area.users.get(k))));
                         }
                         this.sMapStar.put(currentRound, new HashMap<>());
                         for (User user : this.area.users) {
@@ -423,7 +420,7 @@ public class MIP {
             cplex.addGe(sMap.get(user), cplex.constant(1.0));
 
             if (firstRound) {
-                IloNumExpr lConstraint = cplex.constant(0);
+                IloNumExpr lConstraint;
                 lConstraint = cplex.sum(sMap.get(user), cplex.prod(cplex.constant(-1), cplex.constant(1000.0)));
                 lConstraint = cplex.prod(lConstraint, cplex.constant(1.0 / 1000.0));
                 lConstraint = cplex.sum(lConstraint, cplex.constant(Math.log(1000.0)));

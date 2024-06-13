@@ -2,9 +2,8 @@ package nl.jessenagel.mvttdp.algorithmics;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 import nl.jessenagel.mvttdp.framework.*;
 
 public class ILS {
@@ -15,71 +14,8 @@ public class ILS {
     static final int MAX_DEPTH = 7;
     static final int MAX_NO_IMPROVE = 100;
     public int maxLength;
-    public int numberOfInsertCalls = 0;
 
-    private List<Batch> improve(List<Batch> solution) {
-        int A = 0;
-        int R = 1;
-        int noImprove = 0;
-        while (noImprove < MAX_NO_IMPROVE) {
-            List<Batch> tempSolution = new ArrayList<>(solution);
-            int size = tempSolution.size();
 
-            if (R > size) {
-                R = 1;
-            }
-            int start = A;
-            Batch end;
-            double minProfit = Generic.calcScore(tempSolution, this.user, area);
-            if (A + R > size - 1) {
-                end = null;
-                tempSolution.subList(A, size).clear();
-                A = 0;
-            } else {
-                tempSolution.subList(A, A + R).clear();
-                end = tempSolution.get(A);
-            }
-            long startTime = System.nanoTime();
-
-            if (insert(tempSolution, start, end, minProfit, MAX_DEPTH)) {
-                solution = tempSolution;
-                noImprove = 0;
-                A = 0;
-                R = 1;
-            } else {
-                noImprove++;
-                A++;
-                R++;
-            }
-
-        }
-        user.happiness = Generic.calcScore(solution, this.user, area);
-        return solution;
-    }
-
-    private List<Batch> initialisation() {
-        List<Batch> solution = new ArrayList<>();
-        if (insert(solution, 0, null, 0, MAX_DEPTH)) {
-            for (Batch batch : new ArrayList<>(solution)) {
-                List<Batch> tempSolution = new ArrayList<>(solution);
-                int index = tempSolution.indexOf(batch);
-                double minProfit = Generic.calcScore(tempSolution, this.user, area);
-                tempSolution.remove(batch);
-                if (index == tempSolution.size()) {
-                    if (insert(tempSolution, index, null, minProfit, MAX_DEPTH)) {
-                        solution = tempSolution;
-                    }
-                } else {
-                    if (insert(tempSolution, index, tempSolution.get(index), minProfit, MAX_DEPTH)) {
-                        solution = tempSolution;
-
-                    }
-                }
-            }
-        }
-
-        return solution;
-    }
 
     public boolean insert(List<Batch> batches, int start, Batch end, double minProfit, int maxDepth) {
 
@@ -144,7 +80,7 @@ public class ILS {
         int R = 1;
         int noImprove = 0;
         double bestScore = 0;
-        double score = 0;
+        double score;
 
         List<Batch> solution = gapInsert(new ArrayList<>(), eventsToCheck);
         List<Batch> bestSolution = new ArrayList<>(solution);

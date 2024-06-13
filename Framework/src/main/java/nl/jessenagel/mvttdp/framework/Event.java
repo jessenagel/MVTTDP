@@ -8,13 +8,13 @@ import java.util.Map;
 public class Event {
     public String name;
     public Location entrance, exit;
-    public List<Batch> batches;
+    public final List<Batch> batches;
     public int capacity, batchCapacity;
     public boolean singleBatch;
     public TouristTime length, first, last, every;
-    public  List<User> blockList;
+    public final List<User> blockList;
 
-    public Map<Integer, Integer> concurrentVisitors;
+    public final Map<Integer, Integer> concurrentVisitors;
     public Event() {
         this.batches = new ArrayList<>();
         this.blockList = new ArrayList<>();

@@ -1,12 +1,9 @@
 package nl.jessenagel.mvttdp.problemformulators;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
 import nl.jessenagel.mvttdp.framework.*;
 import nl.jessenagel.mvttdp.algorithmics.*;
 public class CommonFunctions {
-    public static Random generator = new Random(TouristConstants.seed);
 
     public static void query(User user, Area area, int numberOfALlowedBookings) {
 //        System.out.println(user.queryTime.toMinutes());
@@ -77,25 +74,5 @@ public class CommonFunctions {
                 iterator = iterator.increaseBy(event.every);
             }
         }
-    }
-    private static TouristTime generateTime() {
-        double number;
-        double a = 9;
-        double d = a - 1.0 / 0.3;
-        double c = 1.0 / Math.sqrt(9 * d);
-        while (true) {
-            double X = generator.nextGaussian();
-            double U = generator.nextDouble();
-            double v = Math.pow(1 + c * X, 3);
-            if (v > 0 && Math.log(U) < Math.pow(X, 2) / 2.0 + d - d * v + d * Math.log(v)) {
-                number = d * v;
-                break;
-            }
-        }
-        number = 420 + number * 30;
-        TouristTime result = new TouristTime("0");
-        result.minute = (int) Math.floor(number);
-        result.rebalance();
-        return result;
     }
 }

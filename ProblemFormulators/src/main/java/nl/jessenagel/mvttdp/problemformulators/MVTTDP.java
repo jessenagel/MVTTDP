@@ -1,9 +1,5 @@
 package nl.jessenagel.mvttdp.problemformulators;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import nl.jessenagel.mvttdp.algorithmics.*;
 import nl.jessenagel.mvttdp.framework.*;
 import nl.jessenagel.mvttdp.io.*;
@@ -17,7 +13,6 @@ public class MVTTDP {
      */
     public void create() {
         this.area = new Area();
-        this.area.simplified = true;
         LoadInputs.readLocations(this.area);
         LoadInputs.readEvents(this.area);
         LoadInputs.readRanking(this.area);
@@ -39,11 +34,7 @@ public class MVTTDP {
         switch (TouristConstants.method) {
             case "MIP":
                 MIP mip = new MIP();
-                try {
-                    mip.solve(this.area);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                mip.solve(this.area);
                 break;
             case "online":
                 this.dynamicDay();
@@ -72,14 +63,9 @@ public class MVTTDP {
      * Called by run(), dynamically simulate a day of tourists arriving.
      */
     private void dynamicDay() {
-        double lambda_hat = 0;
-        if (TouristConstants.knownLambda) {
-            lambda_hat = TouristConstants.lambda;
-        }
+
         for (User user : this.area.users) {
             long startTime = System.nanoTime();
-            int spacesLeft = this.area.calcNumberOfSpacesLeft(user.queryTime);
-            double numberOfExpectedUsers = (960 - user.queryTime.toMinutes()) / 420 * lambda_hat;
             int numberOfAllowedBookings = 20;
             //Block tourist types:
             if (TouristConstants.useBlocking) {
@@ -98,7 +84,7 @@ public class MVTTDP {
             }
             CommonFunctions.query(user, this.area, numberOfAllowedBookings);
             long timeElapsed = System.nanoTime() - startTime;
-            user.runTime = timeElapsed/1000000;
+            user.runTime = (double) timeElapsed /1000000;
         }
     }
 

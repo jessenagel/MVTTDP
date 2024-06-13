@@ -6,20 +6,22 @@ import ilog.concert.IloNumVar;
 import ilog.cplex.IloCplex;
 
 import java.util.*;
+
 import nl.jessenagel.mvttdp.framework.*;
+
 public class Slootweg {
     private static final Double PRE_DETERMINED_CUT_OFF = 0.01;
     private static int I_MAX = 7;
     private static final int I_ENUM = 6;
     public Area area;
-    private static final int MAX_NUMBER_OF_ASSIGNED_EVENTS = 1 ;
+    private static final int MAX_NUMBER_OF_ASSIGNED_EVENTS = 1;
 
     public Slootweg() {
 
     }
 
     public void solve() {
-        if(this.area.events.size()< I_MAX){
+        if (this.area.events.size() < I_MAX) {
             I_MAX = this.area.events.size();
         }
         assignment();
@@ -39,8 +41,7 @@ public class Slootweg {
     }
 
     private void assignment() {
-        try {
-            IloCplex cplex = new IloCplex();
+        try (IloCplex cplex = new IloCplex()){
             //Create variables
             Map<User, Map<Event, IloNumVar>> xMap = new HashMap<>();
             for (User user : this.area.users) {
@@ -98,23 +99,22 @@ public class Slootweg {
 
 
     private void tripExpansion(User user, int numberOfEventsFromWishlist) {
-        if (greedyExpansion(user, numberOfEventsFromWishlist)) {
-        } else {
-            if(numberOfEventsFromWishlist < I_ENUM){
+        if (!greedyExpansion(user, numberOfEventsFromWishlist)) {
+            if (numberOfEventsFromWishlist < I_ENUM) {
                 //Full enumeration used
                 FullEnumeration fullEnumeration = new FullEnumeration();
-                fullEnumeration.user =user;
+                fullEnumeration.user = user;
                 fullEnumeration.area = area;
                 List<Event> eventsToCheck = new ArrayList<>();
                 for (int i = 0; i < numberOfEventsFromWishlist; i++) {
                     eventsToCheck.add(user.wishList.get(i));
                 }
                 List<Batch> newRoute = fullEnumeration.solve(eventsToCheck);
-                if(Generic.calcScore(newRoute,user,area)> user.happiness){
-                    this.area.unbookBatches(user,new ArrayList<>(user.schedule));
-                    this.area.bookBatches(user,newRoute);
+                if (Generic.calcScore(newRoute, user, area) > user.happiness) {
+                    this.area.unbookBatches(user, new ArrayList<>(user.schedule));
+                    this.area.bookBatches(user, newRoute);
                 }
-            }else{
+            } else {
                 //Improve by ILS
                 ILS ils = new ILS();
                 ils.area = this.area;
@@ -124,9 +124,9 @@ public class Slootweg {
                     eventsToCheck.add(user.wishList.get(i));
                 }
                 List<Batch> newRoute = ils.solve(eventsToCheck);
-                if(Generic.calcScore(newRoute,user,area)> user.happiness){
-                    this.area.unbookBatches(user,new ArrayList<>(user.schedule));
-                    this.area.bookBatches(user,newRoute);
+                if (Generic.calcScore(newRoute, user, area) > user.happiness) {
+                    this.area.unbookBatches(user, new ArrayList<>(user.schedule));
+                    this.area.bookBatches(user, newRoute);
                 }
             }
         }
@@ -199,7 +199,7 @@ public class Slootweg {
     }
 
     private void initialTripBuilder(User user) {
-        user.assignment.sort(Comparator.comparing(o -> user.scoreFunction.get(o))); //Sort by score function
+        user.assignment.sort(Comparator.comparing(user.scoreFunction::get)); //Sort by score function
         int i = 0;
         while (true) {
             if (i < user.assignment.size()) {

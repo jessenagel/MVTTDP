@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Batch {
-    public List<User> blockList;
+    public final List<User> blockList;
     public TouristTime startTime, endTime;
     public int capacity;
     public Event event;
-    public List<User> visitors;
+    public final List<User> visitors;
 
     public Batch() {
         this.visitors = new ArrayList<>();

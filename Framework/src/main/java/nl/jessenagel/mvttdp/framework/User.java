@@ -3,23 +3,22 @@ package nl.jessenagel.mvttdp.framework;
 import java.util.*;
 public class User{
     public int groupSize;
-    public Map<Event, Integer> groupSizePerEvent;
+    public final Map<Event, Integer> groupSizePerEvent;
     public String name;
-    public TouristTime endTime;
+    public final TouristTime endTime;
     public boolean isScheduled;
-    public ArrayList<Event> assignment;
+    public final ArrayList<Event> assignment;
     public double runTime;
-    public int priority;
     public double happiness;
     public Location start, end;
     public List<Event> wishList;
-    public  Map<Event,Double> scoreFunction;
+    public final Map<Event,Double> scoreFunction;
     public List<Batch> schedule;
     public  TouristTime startTime;
     public  TouristTime queryTime;
     public  Event startEvent, endEvent;
 
-    public Map<Event,List<Batch>> nonBlockedBatches;
+    public final Map<Event,List<Batch>> nonBlockedBatches;
     public User(){
         this.scoreFunction = new HashMap<>();
         this.groupSizePerEvent = new HashMap<>();

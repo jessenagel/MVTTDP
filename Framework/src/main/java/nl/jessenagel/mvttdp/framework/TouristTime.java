@@ -63,11 +63,11 @@ public class TouristTime {
             this.minute = 60 + this.minute;
         }
         if (this.minute >= 60) {
-            this.hour += Math.floor((double) this.minute / 60);
+            this.hour += (int) Math.floor((double) this.minute / 60);
             this.minute = this.minute % 60;
         }
         if (this.hour >= 24) {
-            this.day += Math.floor((double) this.hour / 24);
+            this.day += (int) Math.floor((double) this.hour / 24);
             this.hour = this.hour % 24;
         }
     }
@@ -86,14 +86,6 @@ public class TouristTime {
     }
     public void print() {
         System.out.println(this.day + ":" + this.hour + ":" + this.minute);
-    }
-
-    public static boolean eq(TouristTime one, TouristTime two) {
-        return one.day == two.day && one.hour == two.hour && one.minute == two.minute;
-    }
-
-    public static boolean neq(TouristTime one, TouristTime two) {
-        return one.day != two.day || one.hour != two.hour || one.minute != two.minute;
     }
 
     public static boolean leq(TouristTime one, TouristTime two) {
@@ -193,21 +185,6 @@ public class TouristTime {
         }
         diff.rebalance();
         return diff;
-    }
-    public static TouristTime max(TouristTime one, TouristTime two){
-        if(TouristTime.geq(one,two)){
-            return one;
-        }else{
-            return two;
-        }
-    }
-
-    public static TouristTime min(TouristTime one, TouristTime two) {
-        if(TouristTime.leq(one,two)){
-            return one;
-        }else{
-            return two;
-        }
     }
 
     public TouristTime decreaseBy(TouristTime touristTime) {

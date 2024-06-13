@@ -8,7 +8,7 @@ import nl.jessenagel.mvttdp.framework.*;
 public class FullEnumeration {
     public User user;
     public Area area;
-    public List<List<Event>> permutations;
+    public final List<List<Event>> permutations;
     public double bestScore;
 
     public FullEnumeration() {

@@ -32,7 +32,7 @@
             <dependency>
                 <groupId>ilog</groupId>
                 <artifactId>cplex</artifactId>
-                <version>20.1.0</version>
+                <version>22.1.1</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
