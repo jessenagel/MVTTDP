@@ -9,7 +9,6 @@ public final class TouristConstants {
     public static String folder = "/export/scratch1/jmn/IdeaProjects/TouristTrip/";
     public static String inputFolder = "/export/scratch1/jmn/IdeaProjects/TouristTrip/inputfiles/amsterdam/";
 
-    public static final boolean knownLambda = true; //Can be set to true if the arrival rate of users is known beforehand
     public static String distanceType = "file"; //Either Euclidean distance for simple coordinates or 'file' if read from file.
     public static double WEIGHT_1 = 1.0;
     public static double WEIGHT_2 = -1.0;
@@ -35,6 +34,8 @@ public final class TouristConstants {
     public static String arrivalProcess = "during"; //During, before,combined
     public static int index = 1;
     public static final double sigma = 4.0;
+
+    public static double MIPGap = 0.001;
 
     public static String experimentID = "None";
     private TouristConstants() {
