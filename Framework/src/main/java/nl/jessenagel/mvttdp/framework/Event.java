@@ -100,6 +100,13 @@ public class Event {
 
     public void updateConcurrentVisitors(Batch batch, Integer groupSize) {
         for(TouristTime time : TouristTime.getAllTimesBetween(batch.startTime,batch.endTime)){
+            if(time==null){
+                System.out.println("NULL");
+            }
+            System.out.println(this.name);
+            time.print();
+            System.out.println(time.toMinutes());
+            System.out.println(this.concurrentVisitors.get(time.toMinutes())+groupSize);
             this.concurrentVisitors.put(time.toMinutes(),this.concurrentVisitors.get(time.toMinutes())+groupSize);
         }
 

@@ -55,7 +55,9 @@ public class MIP {
                 }
 
                 cplex.exportModel("MIP.lp");
-                cplex.setParam(IloCplex.Param.MIP.Tolerances.MIPGap, 0.01);
+                cplex.setParam(IloCplex.Param.MIP.Tolerances.MIPGap, 0.02);
+                cplex.setParam(IloCplex.Param.TimeLimit, 14400);
+
                 if (cplex.solve()) {
                     System.out.println("solved");
                     cplex.writeSolution("MIP.sol");

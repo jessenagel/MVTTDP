@@ -166,7 +166,7 @@ public class Area {
         for (int i = 0; i < numberOfUsers; i++) {
             User user = new User();
             user.name = Integer.toString(i);
-            user.groupSize = (1);
+            user.groupSize = 1;
             user.start = this.getRandomOvernightLocation();
             user.end = this.getRandomOvernightLocation();
             user.startEvent = new Event();
