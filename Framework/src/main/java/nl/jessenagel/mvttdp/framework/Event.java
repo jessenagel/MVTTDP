@@ -35,6 +35,8 @@ public class Event {
         return batchesAtTime;
     }
 
+
+
     public int getCapacityRestOfDay(TouristTime time) {
         int capacity = 0;
         for (Batch batch : this.batches) {
@@ -110,5 +112,14 @@ public class Event {
             this.concurrentVisitors.put(time.toMinutes(),this.concurrentVisitors.get(time.toMinutes())+groupSize);
         }
 
+    }
+
+    public Batch getNextBatchWithCapacity(TouristTime time){
+        for(Batch batch : this.batches){
+            if(TouristTime.geq(batch.startTime,time) && batch.getCurrentCapacity()>0){
+                return batch;
+            }
+        }
+        return null;
     }
 }

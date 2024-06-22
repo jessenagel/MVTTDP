@@ -23,6 +23,12 @@ public class CommonFunctions {
                 fullEnumeration.area = area;
                 route = fullEnumeration.solve(user.wishList);
                 break;
+            case "GRASP":
+                GRASP grasp = new GRASP();
+                grasp.user = user;
+                grasp.area = area;
+                route = grasp.solve(user.wishList);
+                break;
         }
 
         if (route.isEmpty()) {

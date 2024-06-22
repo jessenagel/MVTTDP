@@ -17,63 +17,6 @@ public class ILS {
 
 
 
-    public boolean insert(List<Batch> batches, int start, Batch end, double minProfit, int maxDepth) {
-
-        if (maxDepth <= 0) {
-            return false;
-        }
-        if (!batches.isEmpty()) {
-            if (batches.size() > this.maxLength || TouristTime.geq(batches.get(batches.size() - 1).endTime.increaseBy(area.travelTimes.get(batches.get(batches.size() - 1).event.exit).get(user.end)), user.endTime)) {
-                return false;
-            }
-        }
-        for (Event event : area.events.values()) {
-            boolean alreadyVisited = false;
-            for (Batch batch : batches) {
-                if (batch.event == event) {
-                    alreadyVisited = true;
-                    break;
-                }
-            }
-            if (alreadyVisited) {
-                continue;
-            }
-            Batch nextBatch;
-            if (start == 0) {
-
-                nextBatch = FullEnumeration.firstBatch(user.startTime.increaseBy(area.travelTimes.get(user.start).get(event.entrance)), event, user);
-
-
-            } else {
-                nextBatch = FullEnumeration.firstBatch(batches.get(start - 1).endTime.increaseBy(area.travelTimes.get(batches.get(start - 1).event.exit).get(event.entrance)), event, user);
-            }
-
-            if (nextBatch != null) {
-                if (end == null) {
-                    if (TouristTime.greater(nextBatch.endTime.increaseBy(area.travelTimes.get(event.exit).get(this.user.end)), this.user.endTime)) {
-                        continue;
-                    }
-                } else {
-                    if (TouristTime.greater(nextBatch.endTime.increaseBy(area.travelTimes.get(event.exit).get(end.event.entrance)), end.startTime)) {
-                        continue;
-                    }
-                }
-
-                batches.add(start, nextBatch);
-
-                if (Generic.calcScore(batches, user, area) > minProfit) {
-                    return true;
-                }
-
-                if (insert(batches, batches.indexOf(nextBatch) + 1, end, minProfit, maxDepth - 1)) {
-                    return true;
-                }
-                batches.remove(nextBatch);
-            }
-        }
-
-        return false;
-    }
 
     public List<Batch> solve(List<Event> eventsToCheck) {
         int S = 0;

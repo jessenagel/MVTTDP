@@ -173,7 +173,7 @@ public class LoadInputs {
                 area.baseRanking.add(area.events.get(rankingLineScanner.nextLine()));
             }
         } catch (FileNotFoundException e) {
-            System.err.println("Did not find file: " + TouristConstants.inputFolder + "ranking_" + TouristConstants.index);
+            System.err.println("Did not find file: " + TouristConstants.inputFolder + "ranking" + TouristConstants.index);
         }
     }
 }
