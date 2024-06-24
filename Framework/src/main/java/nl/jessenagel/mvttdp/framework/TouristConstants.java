@@ -38,6 +38,7 @@ public final class TouristConstants {
     public static double MIPGap = 0.001;
 
     public static String experimentID = "None";
+    public static String scratchDir = ".";
     private TouristConstants() {
     }
 }
