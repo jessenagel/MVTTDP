@@ -195,4 +195,14 @@ public class TouristTime {
         output.rebalance();
         return output;
     }
+
+    public static TouristTime fromMinutes(int minutes){
+        TouristTime result = new TouristTime("0:0:"+minutes);
+        result.rebalance();
+        return result;
+    }
+
+    public void printErr() {
+        System.err.println(this.day + ":" + this.hour + ":" + this.minute);
+    }
 }

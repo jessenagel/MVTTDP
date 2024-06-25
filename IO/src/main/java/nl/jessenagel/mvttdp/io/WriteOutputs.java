@@ -40,16 +40,7 @@ public class WriteOutputs {
             }
         }
 
-        for(Event event : area.events.values()){
-            System.out.println(event.name);
-            System.out.println(event.getCapacityFromTill(TouristConstants.openTime,TouristConstants.closeTime));
 
-            for(Batch batch: event.batches){
-                System.out.println("start time");
-                batch.startTime.print();
-                System.out.println("Capacity " + batch.getCurrentCapacity());
-            }
-        }
         double totalScheduleLength = 0;
         for(User user : area.users){
             System.out.println("_________________________________");

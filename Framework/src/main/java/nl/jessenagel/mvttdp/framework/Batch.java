@@ -35,6 +35,10 @@ public class Batch {
             this.event.updateConcurrentVisitors(this,user.groupSizePerEvent.get(this.event));
             return true;
         } else {
+
+            System.out.println("sufficient concurrent:"+this.event.sufficientConcurrentCapacityForGroup(this, user));
+            System.out.println("event blocklist: "+this.event.blockList.contains(user));
+            System.out.println("batch blocklist: "+this.blockList.contains(user));
             return false;
         }
     }

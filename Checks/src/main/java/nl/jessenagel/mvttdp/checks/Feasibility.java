@@ -32,7 +32,7 @@ public class Feasibility {
                     System.err.println("Previous event:"+ previousBatch.event.name);
                     previousBatch.endTime.print();
                     System.err.println("Travel time:");
-                    area.travelTimes.get(previousBatch.event.exit).get(batch.event.entrance).print();
+                    area.travelTimes.get(previousBatch.event.exit).get(batch.event.entrance).printErr();
                     System.err.println(user.name);
                     return false;
                 }

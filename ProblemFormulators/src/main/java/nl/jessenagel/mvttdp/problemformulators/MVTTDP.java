@@ -75,7 +75,6 @@ public class MVTTDP {
                         if(this.area.calculateNumberOfUsersStillTooComeAtBatchMoreSophisticated(batch,user.queryTime) * this.area.calculateProbabilityOfEventRankingHigherThanK(batch.event, user.wishList.indexOf(batch.event)) * TouristConstants.strictness > batch.event.getCapacityFromTill(user.queryTime,batch.startTime)+batch.getCurrentCapacity()){
                             batch.blockList.add(user);
                         }
-
                     }
                 }
             }

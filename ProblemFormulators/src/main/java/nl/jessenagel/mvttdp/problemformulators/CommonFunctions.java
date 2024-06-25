@@ -5,16 +5,14 @@ import nl.jessenagel.mvttdp.framework.*;
 import nl.jessenagel.mvttdp.algorithmics.*;
 public class CommonFunctions {
 
-    public static void query(User user, Area area, int numberOfALlowedBookings) {
-//        System.out.println(user.queryTime.toMinutes());
-        user.queryTime.print();
+    public static void query(User user, Area area, int numberOfAllowedBookings) {
         List<Batch> route = new ArrayList<>();
         switch (TouristConstants.algorithm) {
             case "ILS":
                 ILS ils = new ILS();
                 ils.user = user;
                 ils.area = area;
-                ils.maxLength = numberOfALlowedBookings;
+                ils.maxLength = numberOfAllowedBookings;
                 route = ils.solve(user.wishList.subList(0,ils.maxLength));
                 break;
             case "FullEnumeration":
@@ -27,7 +25,7 @@ public class CommonFunctions {
                 GRASP grasp = new GRASP();
                 grasp.user = user;
                 grasp.area = area;
-                route = grasp.solve(user.wishList);
+                route = grasp.solve(user.wishList.subList(0,numberOfAllowedBookings));
                 break;
         }
 
@@ -37,22 +35,13 @@ public class CommonFunctions {
         }
         for (Batch batch : route) {
             if (!batch.bookGroup(user)) {
-                System.out.println("Something going very wrong!");
+                System.out.println("Unable to book assigned slot. Something going very wrong!");
             }
         }
 
         user.happiness = Generic.calcScore(route, user, area);
         user.schedule = route;
-//        user.printSchedule();
         user.isScheduled = true;
-        if(user.happiness < 5){
-            System.out.println("_--------------------------------------------------------------_");
-            user.printSchedule();
-            user.queryTime.print();
-            for(Event event : user.wishList){
-                System.out.println(event.name);
-            }
-        }
     }
 
 
@@ -72,7 +61,6 @@ public class CommonFunctions {
                 Batch batch = new Batch();
                 batch.event = event;
                 batch.startTime = iterator;
-                System.out.println(batch.event.name);
                 batch.capacity = event.batchCapacity;
                 batch.endTime = batch.startTime.copy().increaseBy(event.length);
 
