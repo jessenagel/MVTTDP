@@ -22,6 +22,12 @@ public class Main {
         }
         MVTTDP mvttdp = new MVTTDP();
         mvttdp.create();
+        long time = System.nanoTime();
         mvttdp.run();
+        time = System.nanoTime() - time;
+        //print running time in seconds
+        System.out.println("Running time: " + time / 1e9);
+
+
     }
 }
