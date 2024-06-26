@@ -6,20 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GRASP {
-   public static final int MAX_ITERATIONS = 10;
-   public static final int RCL_SIZE = 10;
-   public static final double ALPHA = 0.1;
+    public static final int MAX_ITERATIONS = 10;
+    public static final int RCL_SIZE = 10;
+    public static final double ALPHA = 0.1;
     public User user;
     public Area area;
 
-    public List<Batch> solve(List<Event> wishlist){
+    public List<Batch> solve(List<Event> wishlist) {
         List<Batch> bestSolution = new ArrayList<>();
-        for(int i = 1; i<= MAX_ITERATIONS; i++){
-            List <Batch> solution = fuzzyGRASPConstructionPhase(wishlist);
-            localSearch(solution,wishlist);
-            if(bestSolution.isEmpty()) {
+        for (int i = 1; i <= MAX_ITERATIONS; i++) {
+            List<Batch> solution = fuzzyGRASPConstructionPhase(wishlist);
+            localSearch(solution, wishlist);
+            if (bestSolution.isEmpty()) {
                 bestSolution = new ArrayList<>(solution);
-            }else {
+            } else {
                 updateSolution(solution, bestSolution);
             }
         }
@@ -30,9 +30,9 @@ public class GRASP {
     private List<Batch> fuzzyGRASPConstructionPhase(List<Event> wishlist) {
         List<Batch> partialSolution = new ArrayList<>();
         List<Triplet> candidateList = new ArrayList<>();
-        while(true){
+        while (true) {
             candidateList.clear();
-            for(Event event : wishlist) {
+            for (Event event : wishlist) {
                 //check if schedule contains this event:
                 if (partialSolution.stream().anyMatch(batch -> batch.event == event)) {
                     continue;
@@ -40,7 +40,7 @@ public class GRASP {
                 //calculate f
                 for (Batch batch : event.batches) {
 
-                    if(!batch.sufficientCapacityForGroup(user) || batch.blockList.contains(user) || event.blockList.contains(user)){
+                    if (!batch.sufficientCapacityForGroup(user) || batch.blockList.contains(user) || event.blockList.contains(user)) {
                         continue;
                     }
                     if (partialSolution.isEmpty()) {
@@ -63,7 +63,7 @@ public class GRASP {
                             } else {
                                 start = partialSolution.get(i - 1).event.exit;
                                 //check if batch is reachable in time
-                                if(batch.startTime.toMinutes()  < partialSolution.get(i - 1).endTime.toMinutes() +area.travelTimes.get( partialSolution.get(i - 1).event.exit).get(batch.event.entrance).toMinutes() ){
+                                if (batch.startTime.toMinutes() < partialSolution.get(i - 1).endTime.toMinutes() + area.travelTimes.get(partialSolution.get(i - 1).event.exit).get(batch.event.entrance).toMinutes()) {
                                     continue;
                                 }
 
@@ -79,16 +79,16 @@ public class GRASP {
                                     area.travelTimes.get(event.exit).get(end).toMinutes() - area.travelTimes.get(start).get(end).toMinutes();
                             //If the candidate list is not full, add the triplet to the list, otherwise replace the worst triplet if the new triplet is better.
                             if (candidateList.size() < RCL_SIZE) {
-                                if(start==user.start){
+                                if (start == user.start) {
                                     candidateList.add(new Triplet(batch, null, f));
-                                }else{
+                                } else {
                                     candidateList.add(new Triplet(batch, partialSolution.get(i - 1), f));
                                 }
 
                             } else {
-                                if(start==user.start){
+                                if (start == user.start) {
                                     replaceWorstIfBetter(candidateList, new Triplet(batch, null, f));
-                                }else{
+                                } else {
                                     replaceWorstIfBetter(candidateList, new Triplet(batch, partialSolution.get(i - 1), f));
                                 }
                             }
@@ -96,10 +96,10 @@ public class GRASP {
                     }
                 }
             }
-            if(candidateList.isEmpty()){
+            if (candidateList.isEmpty()) {
                 break;
-            }else{
-                if(!insertTriplet(partialSolution,candidateList)){
+            } else {
+                if (!insertTriplet(partialSolution, candidateList)) {
                     break;
                 }
             }
@@ -112,13 +112,13 @@ public class GRASP {
         //Check whether solution is shorter or has better score, and replace if so.
         double solutionScore = 0;
         double bestSolutionScore = 0;
-        for(Batch batch: solution){
+        for (Batch batch : solution) {
             solutionScore += user.scoreFunction.get(batch.event);
         }
-        for(Batch batch: bestSolution){
+        for (Batch batch : bestSolution) {
             bestSolutionScore += user.scoreFunction.get(batch.event);
         }
-        if(solutionScore>bestSolutionScore){
+        if (solutionScore > bestSolutionScore) {
             bestSolution.clear();
             bestSolution.addAll(solution);
         }
@@ -128,20 +128,20 @@ public class GRASP {
         List<Triplet> candidateListStar = new ArrayList<>();
         //Get the triplet with the highest value f from candidateList
         Triplet tripletStar = candidateList.get(0);
-        for(Triplet triplet : candidateList){
-            if(user.scoreFunction.get(triplet.i.event)>user.scoreFunction.get(tripletStar.i.event)){
+        for (Triplet triplet : candidateList) {
+            if (user.scoreFunction.get(triplet.i.event) > user.scoreFunction.get(tripletStar.i.event)) {
                 tripletStar = triplet;
             }
         }
 
-        for(Triplet triplet : candidateList){
-            if(user.scoreFunction.get(triplet.i.event) / user.scoreFunction.get(tripletStar.i.event) >= ALPHA){
+        for (Triplet triplet : candidateList) {
+            if (user.scoreFunction.get(triplet.i.event) / user.scoreFunction.get(tripletStar.i.event) >= ALPHA) {
 
                 candidateListStar.add(triplet);
             }
         }
-        while(!candidateListStar.isEmpty()) {
-            List<Batch> tempSolution= new ArrayList<>(partialSolution);
+        while (!candidateListStar.isEmpty()) {
+            List<Batch> tempSolution = new ArrayList<>(partialSolution);
             boolean tempSolutionFeasible = true;
 
             //Get a random Triplet out of the candidateListStar:
@@ -149,7 +149,7 @@ public class GRASP {
             Triplet randomTriplet = candidateListStar.get(randomIndex);
 
             if (randomTriplet.j == null) {
-                tempSolution.add(0,randomTriplet.i);
+                tempSolution.add(0, randomTriplet.i);
             } else {
                 tempSolution.add(tempSolution.indexOf(randomTriplet.j) + 1, randomTriplet.i);
             }
@@ -159,14 +159,14 @@ public class GRASP {
                 if (i == 0) {
                     //update time
                     timeInMinutes += area.travelTimes.get(user.start).get(tempSolution.get(i).event.entrance).toMinutes();
-                }else{
+                } else {
                     //update time
-                    timeInMinutes += area.travelTimes.get(tempSolution.get(i-1).event.exit).get(tempSolution.get(i).event.entrance).toMinutes();
+                    timeInMinutes += area.travelTimes.get(tempSolution.get(i - 1).event.exit).get(tempSolution.get(i).event.entrance).toMinutes();
                 }
                 //check if batch is reached in time
                 if (timeInMinutes > tempSolution.get(i).startTime.toMinutes()) {
                     //Needs fixing
-                    Batch replacementBatch = tempSolution.get(i).event.getNextBatchWithCapacity(TouristTime.fromMinutes(timeInMinutes),user);
+                    Batch replacementBatch = tempSolution.get(i).event.getNextBatchWithCapacity(TouristTime.fromMinutes(timeInMinutes), user);
 
                     if (replacementBatch != null) {
                         tempSolution.set(i, replacementBatch);
@@ -181,12 +181,12 @@ public class GRASP {
                 timeInMinutes = tempSolution.get(i).endTime.toMinutes();
             }
             //check if hotel is reached in time
-            if (timeInMinutes + area.travelTimes.get(tempSolution.get(tempSolution.size()-1).event.exit).get(user.end).toMinutes() > user.endTime.toMinutes()) {
+            if (timeInMinutes + area.travelTimes.get(tempSolution.get(tempSolution.size() - 1).event.exit).get(user.end).toMinutes() > user.endTime.toMinutes()) {
                 candidateListStar.remove(randomTriplet);
                 tempSolutionFeasible = false;
             }
             //if the solution is feasible, update the partial solution and return true.
-            if(tempSolutionFeasible){
+            if (tempSolutionFeasible) {
                 partialSolution.clear();
                 partialSolution.addAll(tempSolution);
                 return true;
@@ -195,7 +195,7 @@ public class GRASP {
         return false;
     }
 
-    private void localSearch(List<Batch> solution,List<Event> wishList) {
+    private void localSearch(List<Batch> solution, List<Event> wishList) {
         //Try all possible swaps of two batches in the solution.
         int numberOfImprovements = 0;
         boolean improved = true;
@@ -240,7 +240,6 @@ public class GRASP {
             }
             //Try to improve the solution, if no improvement is found, return the best solution.
             if (bestSolution.equals(solution)) {
-                System.out.println("Number of improvements:" + numberOfImprovements);
                 improved = false;
             } else {
                 numberOfImprovements++;
@@ -262,37 +261,38 @@ public class GRASP {
                     }
                     Batch batch = event.getNextBatchWithCapacity(TouristTime.fromMinutes(timeInMinutes + area.travelTimes.get(lastEvent.exit).get(event.entrance).toMinutes()), user);
                     if (batch != null) {
-                        System.out.println("Extended!");
                         solution.add(batch);
                         break;
                     }
                 }
             }
-        }while(improved);
+        } while (improved);
     }
 
     private static void replaceWorstIfBetter(List<Triplet> before, Triplet newTriplet) {
         Triplet worstPair = null;
-        for(Triplet triplet : before){
-            if(worstPair != null){
-                if(worstPair.f > triplet.f){
+        for (Triplet triplet : before) {
+            if (worstPair != null) {
+                if (worstPair.f > triplet.f) {
                     worstPair = triplet;
                 }
-            }else{
+            } else {
                 worstPair = triplet;
             }
         }
         assert worstPair != null;
-        if(worstPair.f<newTriplet.f) {
+        if (worstPair.f < newTriplet.f) {
             before.remove(worstPair);
             before.add(newTriplet);
         }
     }
-    private static class Triplet{
+
+    private static class Triplet {
         private final Batch i;
         private final Batch j;
         private final double f;
-        Triplet(Batch i, Batch j, double f){
+
+        Triplet(Batch i, Batch j, double f) {
             this.i = i;
             this.j = j;
             this.f = f;

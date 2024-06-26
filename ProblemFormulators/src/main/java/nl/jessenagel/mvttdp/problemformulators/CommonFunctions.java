@@ -1,8 +1,10 @@
 package nl.jessenagel.mvttdp.problemformulators;
 
 import java.util.*;
+
 import nl.jessenagel.mvttdp.framework.*;
 import nl.jessenagel.mvttdp.algorithmics.*;
+
 public class CommonFunctions {
 
     public static void query(User user, Area area, int numberOfAllowedBookings) {
@@ -13,7 +15,7 @@ public class CommonFunctions {
                 ils.user = user;
                 ils.area = area;
                 ils.maxLength = numberOfAllowedBookings;
-                route = ils.solve(user.wishList.subList(0,ils.maxLength));
+                route = ils.solve(user.wishList.subList(0, ils.maxLength));
                 break;
             case "FullEnumeration":
                 FullEnumeration fullEnumeration = new FullEnumeration();
@@ -25,7 +27,13 @@ public class CommonFunctions {
                 GRASP grasp = new GRASP();
                 grasp.user = user;
                 grasp.area = area;
-                route = grasp.solve(user.wishList.subList(0,numberOfAllowedBookings));
+                route = grasp.solve(user.wishList.subList(0, numberOfAllowedBookings));
+                break;
+            case "ScoreGRASP":
+                ScoreGRASP scoreGRASP = new ScoreGRASP();
+                scoreGRASP.user = user;
+                scoreGRASP.area = area;
+                route = scoreGRASP.solve(user.wishList.subList(0, numberOfAllowedBookings));
                 break;
         }
 
