@@ -56,8 +56,8 @@ public class MIP {
 
                 cplex.exportModel("MIP.lp");
                 cplex.setParam(IloCplex.Param.MIP.Tolerances.MIPGap, TouristConstants.MIPGap);
-                cplex.setParam(IloCplex.Param.MIP.Strategy.File, 3);
-                cplex.setParam(IloCplex.Param.WorkMem, 20096);
+                cplex.setParam(IloCplex.Param.MIP.Strategy.File, 1);
+                cplex.setParam(IloCplex.Param.WorkMem, 30000);
                 cplex.setParam(IloCplex.Param.TimeLimit, 14400);
                 cplex.setParam(IloCplex.Param.WorkDir, TouristConstants.scratchDir);
 
