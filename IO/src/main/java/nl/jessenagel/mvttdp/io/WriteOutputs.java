@@ -140,7 +140,7 @@ public class WriteOutputs {
     private static JSONObject getJsonObject(Area area, long runTime) {
         JSONObject results = new JSONObject();
         results.put("seed",TouristConstants.seed);
-        results.put("b0.jseta",TouristConstants.BETA);
+        results.put("beta",TouristConstants.BETA);
         results.put("lambda",TouristConstants.lambda);
         results.put("weight1",TouristConstants.WEIGHT_1);
         results.put("weight2",TouristConstants.WEIGHT_2);
