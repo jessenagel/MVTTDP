@@ -70,6 +70,9 @@ public class WriteOutputs {
         }
         System.out.println("Number of zeroes:" + numberOfZeros);
         JSONObject results = getJsonObject(area, runTime);
+        JSONObject users = getJsonObjectUsers(area);
+        JSONObject solution = getJsonObjectSolution(area);
+
         //noinspection ResultOfMethodCallIgnored
         new File("outputfiles/results/" + TouristConstants.experimentID).mkdirs();
         try (FileWriter file = new FileWriter(folder+"outputfiles/results/"+TouristConstants.experimentID+"/results"+s+".json")) {
@@ -80,7 +83,58 @@ public class WriteOutputs {
         } catch (IOException e) {
             System.err.println("IOException");
         }
+        try (FileWriter file = new FileWriter(folder+"outputfiles/results/"+TouristConstants.experimentID+"/solution"+s+".json")) {
+            //We can write any JSONArray or JSONObject instance to the file
+            file.write(solution.toString(4));
+            file.flush();
 
+        } catch (IOException e) {
+            System.err.println("IOException");
+        }
+        try (FileWriter file = new FileWriter(folder+"outputfiles/results/"+TouristConstants.experimentID+"/users"+s+".json")) {
+            //We can write any JSONArray or JSONObject instance to the file
+            file.write(users.toString(4));
+            file.flush();
+
+        } catch (IOException e) {
+            System.err.println("IOException");
+        }
+
+    }
+
+    private static JSONObject getJsonObjectSolution(Area area) {
+        JSONObject users = new JSONObject();
+        for(User user: area.users){
+            JSONObject userObject = new JSONObject();
+            JSONArray schedule = new JSONArray();
+            for(Batch batch: user.schedule){
+                schedule.put(batch.event.name+ " from " + batch.startTime.toString() + " to " + batch.endTime.toString() + " at " + batch.event.name );
+            }
+            userObject.put("schedule",schedule);
+            userObject.put("startTime",user.startTime.toString());
+            userObject.put("endTime",user.endTime.toString());
+            userObject.put("queryTime",user.queryTime.toString());
+            users.put(user.name,userObject);
+        }
+        return users;
+    }
+
+    private static JSONObject getJsonObjectUsers(Area area) {
+        //Create a JSON object which for each user writes the wishlist and the start, end and query time
+        JSONObject users = new JSONObject();
+        for(User user: area.users){
+            JSONObject userObject = new JSONObject();
+            JSONArray wishList = new JSONArray();
+            for(Event event: user.wishList){
+                wishList.put(event.name);
+            }
+            userObject.put("wishList",wishList);
+            userObject.put("startTime",user.startTime.toString());
+            userObject.put("endTime",user.endTime.toString());
+            userObject.put("queryTime",user.queryTime.toString());
+            users.put(user.name,userObject);
+        }
+        return users;
     }
 
     private static JSONObject getJsonObject(Area area, long runTime) {
