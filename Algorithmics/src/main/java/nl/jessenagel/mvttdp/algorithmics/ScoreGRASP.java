@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScoreGRASP {
-    public static final int MAX_ITERATIONS = 30;
-    public static final int RCL_SIZE = 20;
+    public static final int MAX_ITERATIONS = 100;
+    public static final int RCL_SIZE = 30;
     public static final double ALPHA = 0.0;
     public User user;
     public Area area;
@@ -128,7 +128,7 @@ public class ScoreGRASP {
 
     private boolean insertTriplet(List<Batch> partialSolution, List<Triplet> candidateList) {
         List<Triplet> candidateListStar = new ArrayList<>();
-        //Get the triplet with the highest value f from candidateList
+        //Get the triplet with the highest  f from candidateList
         Triplet tripletStar = candidateList.get(0);
         for (Triplet triplet : candidateList) {
             if (user.scoreFunction.get(triplet.i.event) > user.scoreFunction.get(tripletStar.i.event)) {
