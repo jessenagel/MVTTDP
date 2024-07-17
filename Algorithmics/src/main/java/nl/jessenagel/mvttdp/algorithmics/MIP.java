@@ -60,6 +60,7 @@ public class MIP {
                 cplex.setParam(IloCplex.Param.WorkMem, 30000);
                 cplex.setParam(IloCplex.Param.TimeLimit, 14400);
                 cplex.setParam(IloCplex.Param.WorkDir, TouristConstants.scratchDir);
+                cplex.setParam(IloCplex.Param.Emphasis.MIP,2);
 
                 if (cplex.solve()) {
                     System.out.println("solved");
