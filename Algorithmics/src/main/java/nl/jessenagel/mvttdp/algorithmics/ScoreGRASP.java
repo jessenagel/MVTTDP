@@ -48,7 +48,11 @@ public class ScoreGRASP {
 //                        double f = area.travelTimes.get(event.exit).get(user.start).toMinutes() + event.length.toMinutes() +
 //                                (batch.startTime.toMinutes() - user.startTime.toMinutes()) +
 //                                area.travelTimes.get(event.exit).get(user.end).toMinutes() - area.travelTimes.get(user.start).get(user.end).toMinutes() + user.scoreFunction.get(batch.event);
-                        double f = user.scoreFunction.get(batch.event);
+                        double shift = area.travelTimes.get(event.exit).get(user.start).toMinutes() + event.length.toMinutes() +
+                      (batch.startTime.toMinutes() - user.startTime.toMinutes()) +
+                                area.travelTimes.get(event.exit).get(user.end).toMinutes() - area.travelTimes.get(user.start).get(user.end).toMinutes();
+                        double f = Math.abs(user.scoreFunction.get(batch.event) / shift) ;
+//                        double f =user.scoreFunction.get(batch.event);
                         //If the candidate list is not full, add the triplet to the list, otherwise replace the worst triplet if the new triplet is better.
                         if (candidateList.size() < RCL_SIZE) {
                             candidateList.add(new Triplet(batch, null, f));
@@ -183,7 +187,7 @@ public class ScoreGRASP {
                 timeInMinutes = tempSolution.get(i).endTime.toMinutes();
             }
             //check if hotel is reached in time
-            if (timeInMinutes + area.travelTimes.get(tempSolution.get(tempSolution.size() - 1).event.exit).get(user.end).toMinutes() > user.endTime.toMinutes()) {
+            if (timeInMinutes + area.travelTimes.get(tempSolution.get(tempSolution.size() - 1).event.exit).get(user.end).toMinutes() >= user.endTime.toMinutes()) {
                 candidateListStar.remove(randomTriplet);
                 tempSolutionFeasible = false;
             }
@@ -258,11 +262,11 @@ public class ScoreGRASP {
                     if (orderOfEvents.contains(event)) {
                         continue;
                     }
-                    if (timeInMinutes + area.travelTimes.get(lastEvent.exit).get(event.entrance).toMinutes() + event.length.toMinutes() + area.travelTimes.get(event.exit).get(user.end).toMinutes() > user.endTime.toMinutes()) {
+                    if (timeInMinutes + area.travelTimes.get(lastEvent.exit).get(event.entrance).toMinutes() + event.length.toMinutes() + area.travelTimes.get(event.exit).get(user.end).toMinutes() >= user.endTime.toMinutes()) {
                         continue;
                     }
                     Batch batch = event.getNextBatchWithCapacity(TouristTime.fromMinutes(timeInMinutes + area.travelTimes.get(lastEvent.exit).get(event.entrance).toMinutes()), user);
-                    if (batch != null) {
+                    if (batch != null && batch.endTime.toMinutes() + area.travelTimes.get(batch.event.exit).get(user.end).toMinutes() < user.endTime.toMinutes()) {
                         solution.add(batch);
                         break;
                     }

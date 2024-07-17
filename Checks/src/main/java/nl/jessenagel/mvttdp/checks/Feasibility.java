@@ -38,6 +38,8 @@ public class Feasibility {
                 }
                 if (i == user.schedule.size() - 1) {
                     if (TouristTime.greater(batch.endTime.increaseBy(area.travelTimes.get(batch.event.exit).get(user.end)), user.endTime)) {
+                        System.err.println(batch.endTime.increaseBy(area.travelTimes.get(batch.event.exit).get(user.end)).toMinutes());
+                        System.err.println(user.endTime.toMinutes());
                         System.err.println("INFEASIBLE: The final location cannot be reached in time from the last event.");
                         return false;
                     }

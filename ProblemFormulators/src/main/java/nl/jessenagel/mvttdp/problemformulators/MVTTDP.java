@@ -69,7 +69,7 @@ public class MVTTDP {
             int numberOfAllowedBookings = 20;
             //Block tourist types:
             if (TouristConstants.useBlocking) {
-                ILS.MIN_IMPROVEMENT = 1.3; //1.3
+                ILS.MIN_IMPROVEMENT = 1.2; //1.3
                 for (Event event : this.area.events.values()) {
                     for (Batch batch : event.batches) {
                         if(this.area.calculateNumberOfUsersStillTooComeAtBatchMoreSophisticated(batch,user.queryTime) * this.area.calculateProbabilityOfEventRankingHigherThanK(batch.event, user.wishList.indexOf(batch.event)) * TouristConstants.strictness > batch.event.getCapacityFromTill(user.queryTime,batch.startTime)+batch.getCurrentCapacity()){

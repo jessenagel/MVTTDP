@@ -72,6 +72,7 @@ public class MIP {
                         for (int k = 0; k < this.area.users.size(); k++) {
                             sum += Math.abs(Math.log(cplex.getValue(this.sMap.get(this.area.users.get(k)))) - cplex.getValue(lMap.get(this.area.users.get(k))));
                         }
+                        System.out.print("SUM BN=" +sum);
                         this.sMapStar.put(currentRound, new HashMap<>());
                         for (User user : this.area.users) {
                             this.sMapStar.get(currentRound).put(user, cplex.getValue(sMap.get(user)));
