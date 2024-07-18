@@ -12,7 +12,7 @@ public class ILS {
     public User user;
     public Area area;
     static final int MAX_DEPTH = 7;
-    static final int MAX_NO_IMPROVE = 100;
+    static final int MAX_NO_IMPROVE = 30;
     public int maxLength;
 
 

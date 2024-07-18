@@ -8,11 +8,12 @@ import java.io.IOException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import nl.jessenagel.mvttdp.framework.*;
 public class WriteOutputs {
     private static final String folder = TouristConstants.folder;
-
+    static String uniqueID = UUID.randomUUID().toString();
     public static void exportJson(Area area,long runTime){
         Date date = new Date();
         Format formatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss:SS");
@@ -75,7 +76,7 @@ public class WriteOutputs {
 
         //noinspection ResultOfMethodCallIgnored
         new File("outputfiles/results/" + TouristConstants.experimentID).mkdirs();
-        try (FileWriter file = new FileWriter(folder+"outputfiles/results/"+TouristConstants.experimentID+"/results"+s+".json")) {
+        try (FileWriter file = new FileWriter(folder+"outputfiles/results/"+TouristConstants.experimentID+"/results"+s+"_" +uniqueID + ".json")) {
             //We can write any JSONArray or JSONObject instance to the file
             file.write(results.toString(4));
             file.flush();
@@ -83,7 +84,7 @@ public class WriteOutputs {
         } catch (IOException e) {
             System.err.println("IOException");
         }
-        try (FileWriter file = new FileWriter(folder+"outputfiles/results/"+TouristConstants.experimentID+"/solution"+s+".json")) {
+        try (FileWriter file = new FileWriter(folder+"outputfiles/results/"+TouristConstants.experimentID+"/solution"+s+"_" +uniqueID +".json")) {
             //We can write any JSONArray or JSONObject instance to the file
             file.write(solution.toString(4));
             file.flush();
@@ -91,7 +92,7 @@ public class WriteOutputs {
         } catch (IOException e) {
             System.err.println("IOException");
         }
-        try (FileWriter file = new FileWriter(folder+"outputfiles/results/"+TouristConstants.experimentID+"/users"+s+".json")) {
+        try (FileWriter file = new FileWriter(folder+"outputfiles/results/"+TouristConstants.experimentID+"/users"+s+ "_" +uniqueID +".json")) {
             //We can write any JSONArray or JSONObject instance to the file
             file.write(users.toString(4));
             file.flush();
@@ -168,7 +169,7 @@ public class WriteOutputs {
             Format formatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss:SS");
             String s = formatter.format(date);
         try {
-            FileWriter out = new FileWriter(folder + "outputfiles/utilizations/utilization" + s + ".result");
+            FileWriter out = new FileWriter(folder + "outputfiles/utilizations/utilization" + s+"_" + uniqueID  + ".result");
             for(Event event: area.events.values()){
                 for(Batch batch : event.batches){
                     out.write(batch.event.name+";"+batch.startTime.toMinutes()+ ";" + batch.getCurrentCapacity()+";"+batch.capacity+"\n");
