@@ -10,7 +10,7 @@ import nl.jessenagel.mvttdp.framework.*;
 public class MIP {
 
     private static final int MAX_ITERATIONS = 100;
-    private static final double TRESHOLD_VALUE = 0.00001;
+    private static final double TRESHOLD_VALUE = 0.01;
     private int currentRound = 0;
     private IloCplex cplex;
     private Map<User, Map<Event, Map<Event, IloNumVar>>> xMap;
@@ -23,11 +23,11 @@ public class MIP {
     private Area area;
     private static final double SUFFICIENTLY_LARGE = 100000000000.0;
     private boolean firstRound;
-
+    private static final long MAX_TIME = 14400;
     public void solve(Area area) {
         this.firstRound = true;
         sMapStar = new HashMap<>();
-
+        long startTime = System.nanoTime();
         for (int i = 0; i < MAX_ITERATIONS; i++) {
             this.area = area;
             this.xMap = new HashMap<>();
@@ -80,7 +80,9 @@ public class MIP {
                         }
                         firstRound = false;
                         currentRound++;
-                        if (sum <= TRESHOLD_VALUE) {
+                        //Break if accuracy is reached or time is exceeded.
+                        if (sum <= TRESHOLD_VALUE || System.nanoTime() - startTime > MAX_TIME * 1_000_000_000) {
+                            System.out.println("Accuracy = " + sum);
                             break;
                         }
                     }else{
