@@ -6,27 +6,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScoreGRASP {
-    public static final int MAX_ITERATIONS = 100;
-    public static final int RCL_SIZE = 30;
+    public static final int MAX_ITERATIONS = 30;
+    public static final int RCL_SIZE = 10;
     public static final double ALPHA = 0.0;
+    public static final double MIN_IMPROVEMENT = 1.1;
     public User user;
     public Area area;
 
     public List<Batch> solve(List<Event> wishlist) {
-        List<Batch> bestSolution = new ArrayList<>();
+        List<List<Batch>> bestSolutions = new ArrayList<>();
         for (int i = 1; i <= MAX_ITERATIONS; i++) {
             List<Batch> solution = fuzzyGRASPConstructionPhase(wishlist);
             localSearch(solution, wishlist);
-            if (bestSolution.isEmpty()) {
-                bestSolution = new ArrayList<>(solution);
-            } else {
-                updateSolution(solution, bestSolution);
+            bestSolutions.add(new ArrayList<>(solution));
+        }
+        //Sort solutions by length
+        bestSolutions.sort((o1, o2) -> {
+            int length1 = o1.size();
+            int length2 = o2.size();
+            return Integer.compare(length1, length2);
+        });
+        //Get shortest solution
+        List<Batch> bestSolution = bestSolutions.get(0);
+        //Only allow a solution to become the new best solution if it's the same length or at least MIN_IMPROVEMENT better
+        for (List<Batch> solution : bestSolutions) {
+            if ((solution.size() == bestSolution.size() && solutionScore(solution) > solutionScore(bestSolution)) || solutionScore(solution) > solutionScore(bestSolution) * MIN_IMPROVEMENT) {
+                bestSolution = solution;
             }
         }
-
+//                for (List<Batch> solution : bestSolutions) {
+//            if ( solutionScore(solution) > solutionScore(bestSolution) ) {
+//                bestSolution = solution;
+//            }
+//        }
         return bestSolution;
     }
 
+    private double solutionScore(List<Batch> solution ){
+        double score = 0;
+        for(Batch batch :solution){
+            score += user.scoreFunction.get(batch.event);
+        }
+        return score;
+    }
     private List<Batch> fuzzyGRASPConstructionPhase(List<Event> wishlist) {
         List<Batch> partialSolution = new ArrayList<>();
         List<Triplet> candidateList = new ArrayList<>();
@@ -49,12 +71,16 @@ public class ScoreGRASP {
 //                                (batch.startTime.toMinutes() - user.startTime.toMinutes()) +
 //                                area.travelTimes.get(event.exit).get(user.end).toMinutes() - area.travelTimes.get(user.start).get(user.end).toMinutes() + user.scoreFunction.get(batch.event);
                         double shift = area.travelTimes.get(event.exit).get(user.start).toMinutes() + event.length.toMinutes() +
-                      (batch.startTime.toMinutes() - user.startTime.toMinutes()) +
+                                (batch.startTime.toMinutes() - user.startTime.toMinutes()) +
                                 area.travelTimes.get(event.exit).get(user.end).toMinutes() - area.travelTimes.get(user.start).get(user.end).toMinutes();
-                        double f = Math.abs(user.scoreFunction.get(batch.event) / shift) ;
+                        double f = Math.abs(user.scoreFunction.get(batch.event) / shift);
 //                        double f =user.scoreFunction.get(batch.event);
                         //If the candidate list is not full, add the triplet to the list, otherwise replace the worst triplet if the new triplet is better.
                         if (candidateList.size() < RCL_SIZE) {
+                            double score = solutionScore(partialSolution);
+                            if( score + user.scoreFunction.get(batch.event) < score * MIN_IMPROVEMENT){
+                                continue;
+                            }
                             candidateList.add(new Triplet(batch, null, f));
                         } else {
                             replaceWorstIfBetter(candidateList, new Triplet(batch, null, f));
@@ -124,7 +150,7 @@ public class ScoreGRASP {
         for (Batch batch : bestSolution) {
             bestSolutionScore += user.scoreFunction.get(batch.event);
         }
-        if (solutionScore > bestSolutionScore) {
+        if (solutionScore > bestSolutionScore ) {
             bestSolution.clear();
             bestSolution.addAll(solution);
         }
@@ -142,7 +168,6 @@ public class ScoreGRASP {
 
         for (Triplet triplet : candidateList) {
             if (user.scoreFunction.get(triplet.i.event) / user.scoreFunction.get(tripletStar.i.event) >= ALPHA) {
-
                 candidateListStar.add(triplet);
             }
         }
@@ -153,7 +178,14 @@ public class ScoreGRASP {
             //Get a random Triplet out of the candidateListStar:
             int randomIndex = (int) (Area.generator.nextDouble() * candidateListStar.size());
             Triplet randomTriplet = candidateListStar.get(randomIndex);
-
+            //Check minimprovement
+            double currentScore = 0;
+            for (Batch batch : partialSolution) {
+                currentScore += user.scoreFunction.get(batch.event);
+            }
+//            if (user.scoreFunction.get(randomTriplet.i.event) + currentScore < currentScore * MIN_IMPROVEMENT) {
+//                continue;
+//            }
             if (randomTriplet.j == null) {
                 tempSolution.add(0, randomTriplet.i);
             } else {
