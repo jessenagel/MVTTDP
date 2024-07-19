@@ -14,7 +14,7 @@ public class Slootweg {
     private static int I_MAX = 7;
     private static final int I_ENUM = 6;
     public Area area;
-    private static final int MAX_NUMBER_OF_ASSIGNED_EVENTS = 1;
+    private static final int MAX_NUMBER_OF_ASSIGNED_EVENTS = 2;
 
     public Slootweg() {
 
